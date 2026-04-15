@@ -1,3 +1,9 @@
+/*
+ * Copyright 2026, ablyss jb@epluribusunix.net
+ * All rights reserved. Distributed under the terms of the MIT license.
+ */
+
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -91,47 +97,3 @@ int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *par
 int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param) {
     return 0;
 }
-
-
-// Add these dummy LADSPA functions
-LADSPA_Handle dummy_instantiate(const LADSPA_Descriptor * Descriptor, unsigned long SampleRate) {
-    return (LADSPA_Handle)1; // Return a fake handle
-}
-
-void dummy_connect(LADSPA_Handle Instance, unsigned long Port, LADSPA_Data * DataLocation) {
-    // Do nothing
-}
-
-void dummy_null(LADSPA_Handle Instance) {
-    // For activate/deactivate/cleanup
-}
-
-const LADSPA_Descriptor * ladspa_descriptor(unsigned long Index) {
-    static LADSPA_Descriptor d;
-    if (Index != 0) return NULL;
-
-    d.UniqueID = 1913; // JAMin will accept this for the various slots
-    d.Label = "stub";
-    d.Properties = 0;
-    d.Name = "SWH Stub";
-    d.Maker = "Haiku Porter";
-    d.Copyright = "None";
-    
-    // Crucial: JAMin expects these to be callable functions
-    d.PortCount = 0;
-    d.PortDescriptors = NULL;
-    d.PortNames = NULL;
-    d.PortRangeHints = NULL;
-    d.ImplementationData = NULL;
-    d.instantiate = dummy_instantiate;
-    d.connect_port = dummy_connect;
-    d.activate = dummy_null;
-    d.run = (void*)dummy_null; // Needs a cast, but just needs to not be NULL
-    d.deactivate = dummy_null;
-    d.cleanup = dummy_null;
-    
-    return &d;
-}
-
-
-

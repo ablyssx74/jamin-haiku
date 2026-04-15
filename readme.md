@@ -1,23 +1,30 @@
 ### A port in progress of jamin to Haiku OS
 
 ### Dependencies:
-```pkgman install ladspa_sdk_devel gtk3_devel gettext_devel automake autoconf libtool intltool pkgconfig glib2_devel```
+```
+pkgman install ladspa_sdk_devel fftw_devel gtk3_devel libxml2_devel gettext gettext_devel make automake autoconf libtool intltool pkgconfig glib2_devel
 
-### Building:
+```
+
+### Build / Install libspa
+```
+https://github.com/swh/ladspa.git
+./autogen.sh
+./configure --prefix=/boot/home/config/non-packaged
+curl -L https://cpanmin.us | perl - --self-upgrade
+cpanm List::MoreUtils
+make
+make install
+```
+
+### Build / Test jamin:
 ```
 gcc -shared -o libjack.so jack_stubs.c
 LIBRARY_PATH="$LIBRARY_PATH:." ./autogen.sh ACLOCAL_FLAGS="-I /boot/system/develop/headers/m4" JACK_CFLAGS="-I." JACK_LIBS="-L. -ljack"
 make CFLAGS="-fcommon -I.." LDFLAGS="-L.. -ljack"
 
-```
-
-### Testing:
-```
-ln -sf ${PWD}/libjack.so ~/config/non-packaged/add-ons/ladspa/fast_lookahead_limiter_1913.so
-ln -sf ${PWD}/libjack.so ~/config/non-packaged/add-ons/ladspa/foo_limiter.so
-ln -sf ${PWD}/libjack.so ~/config/non-packaged/add-ons/ladspa/sc4_1882.so
-
 export LIBRARY_PATH="$LIBRARY_PATH:."
-export LADSPA_PATH=~/config/non-packaged/add-ons/ladspa
+export LADSPA_PATH=/boot/home/config/non-packaged/lib/ladspa
 ./src/jamin -d -t -f test/files/default.jam
+
 ```
