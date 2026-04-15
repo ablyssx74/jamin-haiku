@@ -1,6 +1,6 @@
 ### A port in progress of jamin to Haiku OS
 
-### Requires:
+### Dependencies:
 ```pkgman install ladspa_sdk_devel gtk3_devel gettext_devel automake autoconf libtool intltool pkgconfig glib2_devel```
 
 ### Building:
