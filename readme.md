@@ -19,12 +19,13 @@ make install
 
 ### Build / Test jamin:
 ```
-gcc -shared -o libjack.so jack_stubs.c
-LIBRARY_PATH="$LIBRARY_PATH:." ./autogen.sh ACLOCAL_FLAGS="-I /boot/system/develop/headers/m4" JACK_CFLAGS="-I." JACK_LIBS="-L. -ljack"
-make CFLAGS="-fcommon -I.." LDFLAGS="-L.. -ljack"
+./configure JACK_CFLAGS="-I." JACK_LIBS="-L$(pwd) -ljack"
+make CFLAGS="-fcommon -I." LDFLAGS="-L$(pwd) -ljack"
 
-export LIBRARY_PATH="$LIBRARY_PATH:."
+g++ -shared -fPIC jack_stubs.cpp -o src/libjack.so -lmedia -lbe
+
+export LIBRARY_PATH=".:$LIBRARY_PATH"
 export LADSPA_PATH=/boot/home/config/non-packaged/lib/ladspa
-./src/jamin -d -t -f test/files/default.jam
+./src/jamin -f test/files/default.jam
 
 ```

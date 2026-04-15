@@ -58,6 +58,19 @@ typedef struct {
 extern "C" {
 #endif
 
+
+    int jack_port_flags(const jack_port_t);
+    const char* jack_port_short_name(const jack_port_t);
+    int jack_port_connected_to(const jack_port_t, const char*);
+    uint32_t jack_frame_time(jack_client_t);
+    void jack_port_set_latency(jack_port_t, jack_nframes_t);
+    jack_port_t jack_port_register(jack_client_t, const char*, const char*, unsigned long, unsigned long);
+    jack_client_t jack_client_new(const char*);
+    int jack_set_xrun_callback(jack_client_t, int (*)(void*), void*);
+    int jack_set_buffer_size_callback(jack_client_t, int (*)(jack_nframes_t, void*), void*);
+    int jack_is_realtime(jack_client_t);
+
+
 const char** jack_get_ports(jack_client_t, const char*, const char*, unsigned long);
 void jack_free(void* ptr); // You'll likely need this too to free the pports list
 void jack_transport_start(jack_client_t);
