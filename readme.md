@@ -7,8 +7,6 @@
 ```
 gcc -shared -o libjack.so jack_stubs.c
 LIBRARY_PATH="$LIBRARY_PATH:." ./autogen.sh ACLOCAL_FLAGS="-I /boot/system/develop/headers/m4" JACK_CFLAGS="-I." JACK_LIBS="-L. -ljack"
-
-
 make CFLAGS="-fcommon -I.." LDFLAGS="-L.. -ljack"
 
 ```
