@@ -1,0 +1,796 @@
+cz5k5 kHzcz1k1 kHzruSet the minimum gain level for the EQУстановить минимальный уровень усиления в эквалайзереczInput BalanceVstupní vyváženíru16k16кru16 KHz16 кГцfrBypass all processingDésactive tous les traitementsruLow Band BypassОбход низкихczPreferencesNastavenícz%s internal error %d: %s
+%s vnitřní chyba %d: %s
+cz0.00.0czHDEQ CurveKřivka ručně kresleného ekvalizérucz    The EQ Options dialog allows you to set the minimum and maximum gain level in dB for both the HDEQ and GEQ.  You can also set the source of the spectrum for both the HDEQ and spectrum windows.  Spectrum update frequency can be set here as well.  Up to 10 per second (default) and down to 0 (disabled).
+    Okno s volbami pro ekvalizér vám umožňuje nastavit nejnižší a nejvyšší úroveň zesílení v dB jak pro ručně kreslený ekvalizér tak pro obrazový ekvalizér. Také můžete nastavit zdroj spektra jak pro ručně kreslený ekvalizér tak pro okna se spektrem. Obnovovací kmitočet spektra zde lze nastavit taktéž. Směrem nahoru po 10 za sekundu (výchozí) a dolů do 0 (zakázáno).
+czCrossover typeTyp přechoduczLow Band Stereo WidthŠířka sterea v nízkém pásmucz%s  |  %4.1f%% CPU  |  %d xruns  |  %<PRIu32> frames  |  %<PRIu32> Hz%s%s  |  %4.1f%% CPU  |  %d xruns  |  %<PRIu32> snímků  |  %<PRIu32> Hz%sfrTime (ms):Temps (ms):ruSelect a session fileВыберите файл сессииcz1200 Hz1200 HzruCrossfadeКроссфейдcz4k4 kHzczInputVstupfrRight click for menuClic droit pour le menuru2500 Hz2500 ГцfrCannot connect output port "%s"
+Impossible de se connecter au port de sortie "%s"
+ruMidСредниеruStoppedОстановленоfr%s  |  %4.1f%% CPU  |  %d xruns  |  %<PRIu32> frames  |  %<PRIu32> Hz%s%s  |  %4.1f%% CPU  |  %d désynchronisations (xruns)  |  %<PRIu32> échantillons  |  %<PRIu32> Hz%scz%s: Cannot register JACK ports.%s: Nelze zapsat přípojky JACK.ruMaximum gain (db):Максимальное усиление (Дб):ru    This button allows you to bypass all EQ processing.  It will have no effect on any of the other controls.
+    Эта кнопка позволяет включить обход  всех изменений в эквализации.  На остальные регуляторы это никак не влияет.
+cz1k51,5 kHzruLow : 00000 - 00000Низкие : 00000 - 00000frSet scene nameNomme la scènecz7979frInEntréecz_Ports_PřípojkyruJAMin session fileФайл сессии JAMinczReleaseUvolněnírurewind transportперемотать назадruHDEQ GridСетка HDEQruJACK Audio Mastering interfaceJAMin -- приложение для мастеринга звукаczOutputVýstupru5050ruChoose source for spectrum displayВыбрать источник звука для анализатора спектраcz50 Hz50 HzczMakeup gainDoplněné zesílenífrLow Band SoloSolo Bande Gravesru79 Hz79 ГцruSoloСолоcz16 KHz16000 Hzcz16k16 kHzruInput BalanceВходной балансfr0000000000ru1k1кru5k5кfrdisconnecting port %s from %s
+déconnexion port %s à %s
+czBar B biasZkreslení pruhu Bcz    The compressor curves show a graphical representation of the compression for each compressor band.  The bands are defined by the crossover that can be set using the crossover faders or the crossover bars in the HDEQ.  The X-axis shows the input in db while the Y-axis shows the output in db.  The scale is from -60 to 0 in X and -60 to +30 in Y.
+    Kompresorové křivky ukazují obrazové znázornění stlačení pro každé pásmo kompresoru. Pásma jsou stanovena přechodem, který lze nastavit pomocí přechodových prolínačů nebo přechodových pruhů v ručně kresleném ekvalizéru. Osa x ukazuje vstup v dB, zatímco osa y ukazuje výstup v dB. Stupnice je od -60 do 0 v x a -60 po +30 v y.
+ru0.00.0cz    The solo buttons allow you to listen to selected bands while muting the other bands.  Selecting two of the solo buttons effectively mutes the remaining band.  The per band bypass buttons allow you to bypass compression on the selected bands.
+    Tlačítka pro sólo vám umožní poslech vybraných pásem, zatímco jiná pásma jsou ztlumena. Výběr dvou tlačítek pro sólo účinně ztlumí zbývající pásmo. Tlačítka pro ruční obejití vám umožní obejít zhuštění u vybraných pásem.
+ruHDEQ CurveКривая HDEQruPreferencesНастройкиczLow Band BypassObejít nízké pásmoruLow Band Stereo WidthСтереобаза низкихruCrossover typeТип кроссовераczSelect a session fileVybrat soubor se sezenímfr%s: Cannot contact JACK server, is it running?
+%s: Impossible de contacter le serveur JACK. Est-il lancé?
+frforward transportdéplacer en avantfrSelect HDEQ spectrum sourceSelectionner spectre source égaliseur HDruInputВходczMidStřední kmitočetfr<b>HDEQ</b><b>Egaliseur HD</b>cz2500 Hz2500 Hzruconnecting port %s to %s
+порт %s соединяется с %s
+ru1200 Hz1200 Гцru4k4кczCrossfadeProlínánífrII_RII_RfrHigh Band SoloSolo Bande AigüesczStoppedZastavenoczMaximum gain (db):Největší zesílení (dB):cz Terminating due to -F option.
+ Ukončuje se kvůli volbě -F.
+czSet the minimum gain level for the EQNastavit úroveň nejmenšího zesílení pro ekvalizérfr2525fr--------czJAMin session fileSoubor se sezením JAMinruReleaseЗатуханиеcz5050ruOutputВыходczHDEQ GridMřížka ručně kresleného ekvalizéruczrewind transportPřetočit zpětru7979czLow : 00000 - 00000Nízký kmitočet: 00000 - 00000ru1k51к5frBypassDésactiverru_PortsП_ортыcz%dHz , EQ : %ddb , Spectrum : %ddb%d Hz , EQ : %d dB , Spektrum : %d dBczSoloSólocz79 Hz79 Hzru50 Hz50 ГцruMakeup gainУсиление мэйк-апаfr<b>30 band EQ</b><b>Egaliseur 30 bandes</b>czJAMinJAMinczLevelÚroveňfrSetRéglerruHDEQ BackgroundФон HDEQruMid Band BypassОбход среднихcz%s: unique name `%s' assigned
+%s: jedinečný název `%s' přiřazen
+frMeter NormalVU-mètre normalczGanged ControlsSpřáhnuté ovladačeczrPoměrfrOutput meter peakCrête VU-mètrecz_General_ObecnéruLowНизкиеruAbout PrerequisitesО предпосылкахcz    This button allows you to bypass all EQ processing.  It will have no effect on any of the other controls.
+    Toto tlačítko vám umožní obejít všechna zpracování ekvalizéru. Nebude mít žádný účinek na jakékoli jiné ovládání.
+frunable to connect to %s
+connexion impossible à %s
+cz    The boost control allows the user to add 'tube like' gain to the output signal.  Use to taste (New England mild to Cajun spicy).  Clicking the right mouse button on the boost control will reset the value to 0.0.
+    Ovládání zesilovače uživateli umožňuje přidat do výstupního signálu zesílení "na způsob trubky". Používejte podle chuti (od mírné Nové Anglie až po silně okořeněný Cajun). Klepnutí pravým tlačítkem myši na ovládání zesílení nastaví hodnotu znovu na 0.0.
+czleft %.0fdBVlevo %.0fdBczMid Band Stereo WidthŠířka sterea ve středním pásmuczpause transportPozastavitfrStartingDémarrefrPost compressor spectrumSpectre post-compresseur czunable to connect to %s
+Nelze se připojit do %s
+frInput GainGain d'entréeczLicensePovoleníczLimitOmezitru%s: Cannot activate JACK client.%s: Не удаётся активировать JACK-клиент.ruHDEQHDEQcz10k10 kHzcz10 KHz10000 Hzfr3131frMid Band SoloSolo Bande MédiumsfrThresholdSeuilcz_Edit_ÚpravyruPre EQДо эквализацииcz    The input section allows you to set the input gain to the JAMin system.  You can also pan the input left or right.  Clicking the right mouse button on the gain/balance control will reset the value to 0.0/centre.  Clicking the right mouse button on the meters will reset the peak indicator to the current level.
+    Vstupní část vám umožňuje nastavit vstupní zesílení pro systém JAMinu. Také můžete vyrovnat vstup nalevo nebo napravo. Klepnutí pravým tlačítkem myši na řízení zesílení/vyvážení nastaví hodnotu znovu na 0.0/střed. nastaví hodnotu znovu na 0.0. Klepnutí pravým tlačítkem myši na měřidla nastaví ukazatele vrcholu (nejvyššího bodu) znovu na současnou úroveň.
+cz  |  RT  |  Ve skutečném čase (RT)fr[unknown][inconnu]czRollingJederuMid : 00000 - 00000Средние : 00000 - 00000czMid Band BypassObejít střední pásmoczHDEQ BackgroundPozadí ručně kresleného ekvalizéruruJAMinJAMinfr<i><b>Warning Level</b></i><i><b>Niveau d'Alerte</b></i>ruLevelУровеньczUsage: %s [-%s] [inport1 inport2 [outport1 outport2]]
+
+user options:
+	-f file	load session file on startup
+	-h	show this help
+	-j name	JACK server name
+	-n name	JACK client name
+	-s freq	set spectrum update frequency
+	-c time	crossfade time
+	-r	use example GTK resource file
+	-p	do not automatically connect JACK output ports
+	-v	verbose output (use -vv... for more detail)
+	-V	print JAMin version and quit
+
+developer options:
+	-d	dummy mode (don't connect to JACK)
+	-F	treat all errors as fatal
+	-T	print trace buffer
+	-t	don't start separate DSP thread
+
+Použití: %s [-%s] [inport1 inport2 [outport1 outport2]]
+
+Volby pro uživatele:
+	-f file	nahrát soubor se sezením při spuštění
+	-h	ukázat tuto nápovědu
+	-j name	název serveru JACK
+	-n name	název klienta JACK
+	-s freq	nastavit obnovovací kmitočet spektra
+	-c time	čas prolínání
+	-r	použít zdrojový soubor GTK s příkladem 
+	-p	nespojovat automaticky výstupní přípojky JACK
+	-v	podrobný výstup (použijte -vv... pro více podrobností)
+	-V	ukázat verzi JAMinu a ukončit
+
+Volby pro vývojáře:
+	-d	blbý režim ("dummy"; nepřipojovat se k serveru JACK)
+	-F	považovat všechny chyby za vážné
+	-T	ukázat stopovací vyrovnávací paměť
+	-t	nezačínat oddělené vlákno DSP
+
+frKTrurrruGanged ControlsОбъединённые органы управленияfr<b>Output</b><b>Sortie</b>ruUsage: %s [-%s] [inport1 inport2 [outport1 outport2]]
+
+user options:
+	-f file	load session file on startup
+	-h	show this help
+	-j name	JACK server name
+	-n name	JACK client name
+	-s freq	set spectrum update frequency
+	-c time	crossfade time
+	-r	use example GTK resource file
+	-p	do not automatically connect JACK output ports
+	-v	verbose output (use -vv... for more detail)
+	-V	print JAMin version and quit
+
+developer options:
+	-d	dummy mode (don't connect to JACK)
+	-F	treat all errors as fatal
+	-T	print trace buffer
+	-t	don't start separate DSP thread
+
+Использование: %s [-%s] [вход.порт1 вход.порт2 [выход.порт1 выход.порт2]]
+
+ключи для пользователей :
+	-f файл	загрузить при старте файл сцены
+	-h	показать эту справку
+	-n имя	установить имя JACK-клиента
+	-s частота	установить частоту обновления спектра
+	-c время	установить время кроссфейда
+	-r	использовать дополнительную GTK-тему
+	-p	не соединяться с портами выхода JACK автоматически
+	-v	подробный вывод (использовать -vv... для ещё более подробного вывода)
+	-V	показать версию программы и выйти
+
+ключи для разработчиков:
+	-d	"придуривающийся" режим (не соединяться с jackd)
+	-F	считать все ошибки фатальными
+	-T	печатать буфер трейса
+	-t	не запускать DSP-нить
+
+ru
+JAMin is the JACK Audio Mastering interface.  JAMin is designed to perform professional audio mastering of any number of input streams.  It consists of a number of tools to do this: a 1024 band hand drawn EQ with modifiable parametric controls, a 31 band graphic EQ, 3 band compressor, 3 band stereo width control, lookahead limiter, boost, and a number of other features.
+JAMin - это приложение для мастеринга звука, работающее через сервер JACK. JAMin спроектирован для профессионального мастеринга звука, посылаемого с любого количества источников.  Программа  состоит из нескольких инструментов: 1024-полосный рисуемый от руки эквалайзер с изменяемыми параметрическими точками контроля, 31-полосный графический эквалайзер, 3-полосный компрессор, 3-полосный контроллер стереопанорамы, lookahead-ограничитель (лимитер), усиление сигнала и некоторые другие.ru_General_Общиеfrright %.0fdBdroite %.0fdBcz    The spectrum display shows the power spectrum of the signal in bands that correspond to the frequency bands in the 30 band EQ (GEQ). In addition it displays the maximum value reached for each band as a (by default) blue line.
+    Zobrazení spektra ukazuje výkonnostní spektrum signálu v pásmech, jež odpovídají kmitočtovým pásmům v třicetipásmovém obrazovém ekvalizéru. Dále ještě zobrazuje nejvyšší hodnotu dosaženou u každého pásma jako modrou čáru (ve výchozím nastavení).
+czLowNízký kmitočetczPost EQ spectrum        Spektrum po ekvalizéruczAbout PrerequisitesO nutných předpokladechfrSelect colors for main JAMin GUI componentsRègle les couleurs des composants de l'interfaceczMid to High Band CrossoverPřechod ze středního do vysokého pásmafrClose the popup menuFermer le menu popuprupause transportприостановитьruMid Band Stereo WidthСтереобаза среднихruleft %.0fdBслева %.0fДбruLicenseЛицензияcz(C) 2003-2005 J. Depner, S. Harris, J. O'Quin, R. Parker and P. Shirkey
+(C) 2003-2005 J. Depner, S. Harris, J. O'Quin, R. Parker a P. Shirkey
+ru    The File menu has the standard options available.  Save and Save As allow you to save the scenes and settings for a session to a .jam file.  By default these are saved in the $HOME/.jamin directory but may be saved anywhere.
+    The Edit menu has undo and redo options for changes to the settings.
+    The Ports menu allows you to set the input and output ports for JAMin.
+    The Options menu has EQ Options and Preferences entries.  The EQ Options dialog allows you to set the minimum and maximum gain level in dB for both the HDEQ and GEQ.  You can also set the source of the spectrum for both the HDEQ and spectrum windows.  Spectrum update frequency can be set here as well.  Up to 10 per second (default) and down to 0 (disabled).
+    Colors may be changed in the Options->Preferences dialog.  These colors are saved in the file $HOME/.jamin-defaults.  This is done whenever you exit from JAMin.  You can actually edit this file and change the colors by hand.  They are just RGB values in the 0-65535 range but it's much easier to use the GUI ;-).  You may also set the crossfade time and crossover type in this dialog (see the man page for more information on crossfade time and crossover type).
+    For help on the rest of the GUI, context specific help can be obtained by moving the mouse pointer into one of the tool areas (compressor, EQ, limiter, input, etc) and pressing <Shift><F1>.
+    Меню "Файл" ничем примечательным не выделяется. Командами "Сохранить" и "Сохранить как..." текущие сцены и их настройки можно сохранить для данной сессии или же в файл с расширением .jam.  По умолчанию сцены сохраняются в каталог $HOME/.jamin, но это может быть изменено.
+    В меню "Правка" доступны команды "Отменить" и "Повторить" для контроля над изменениями в сессии.
+    Через меню "Порты" для JAMin можно назначать порты входа и выхода.
+    Через меню "Настройки" можно вызвать диалог настроек эквалайзера и диалог общих для программы настроек. В диалоге настроек эквалайзера можно установить минимальный и максимальный уровни (в Дб) для рисуемого от руки (HDEQ) и графического эквалайзеров. Вы также можете указать источник для отрисовки графика частотного спектра для рисуемого от руки эквалайзера и спектральных окон.  Помимо того, здесь можно установить частоту обновления графика частотного спектра - от 10 раз в секунду (по умолчанию) до 0 (обновление отключено).
+    Цвета можно изменять в диалоге, вызываемом через "Настройки" -> "Общие". Установки цветов сохраняются в файл $HOME/.jamin-defaults.  Это происходит при каждом выходе из JAMin.  При желании, цвета можно изменить прямым редактированием файла, поскольку значения цветов лежат в пространстве палитры RGB (0-65535). Но мы всё-таки рекомендуем использовать графический интерфейс ;-).  В этом диалоге также можно установить время кроссфейда (подробнее о времени кроссфейда можно прочитать в man-странице JAMin, набрав в консоли 'man jamin').
+    Справку по отдельным частям графического интерфейса программы можно получить, наведя мышку на интересуемую область (компрессор, эквалайзер, ограничитель, вход и т.д.) и нажав <Shift><F1>.
+ruunable to disconnect port %s
+не удаётся отсоединить порт %s
+ruLimitПределru    The input section allows you to set the input gain to the JAMin system.  You can also pan the input left or right.  Clicking the right mouse button on the gain/balance control will reset the value to 0.0/centre.  Clicking the right mouse button on the meters will reset the peak indicator to the current level.
+Здесь настраивается усиление и панорамирование входящего в JAMin сигнала  Щелчком правой кнопкой мыши по регулятору усиления/баланса значение сбрасывается до 0.0/центра. Щелчком правой кнопки мыши индикатор пика сбрасывается в исходное состояние.
+frAAczPre EQPřed ekvalizérru_Edit_Правкаcz    The transport controls give you the usual tape transport type controls.  These are useful if you are using other JACK enabled applications that honor the JACK transport control functions (ecamegapedal, Ardour). Note that there is no stop button (use pause). Some JACK and system status information is available to the right of the transport buttons.  The fast forward and reverse buttonsa will move the transport forward or back by five seconds.
+    Ovládače pro pohyb v záznamu vám dávají obvyklé ovládání typu přesunutí se po pásku. Jsou užitečné, jestliže používáte jiné programy s povoleným JACKem, které ctí funkce JACKu pro ovládání přesunu (ecamegapedal, Ardour). Všimněte si, že tu není žádné tlačítko pro zastavení (použijte pozastavení). Jsou dostupné některé informace týkající se JACKu a stavu systému. Nacházejí se napravo od tlačítek pro přesun. Tlačítka Vpřed a Zpět provádějí přesun dopředu nebo dozadu o pět sekund.
+ru10k10кru10 KHz10 кГцruunable to connect from %s
+не удаётся соединить из %s
+czHDEQRučně kreslený ekvalizérru%s: not permitted to create realtime DSP thread.
+	You must run as root or use JACK capabilities.
+	Continuing operation, but with -t option.
+%s: не разрешено создавать DSP-нить в реальном времени.
+	Необходимо запустить программу с правами 
+	суперпользователя или с JACK capabilities.
+	Выполнение операции продолжается с ключом -t.
+cz
+Web site: <http://jamin.sourceforge.net>
+
+Mailing list: http://lists.sourceforge.net/lists/listinfo/jamin-devel
+
+Project page: http://sourceforge.net/projects/jamin/
+Stránky: <http://jamin.sourceforge.net>
+
+Poštovní seznam: http://lists.sourceforge.net/lists/listinfo/jamin-devel
+
+Stránky projektu: http://sourceforge.net/projects/jamin/cz%s: JACK server started
+%s: Server JACK spuštěn
+ruRollingВоспроизводитсяru  |  RT  |  RTczMid : 00000 - 00000Střední kmitočet: 00000 - 00000cz    The lookahead limiter is a brickwall limiter that will not allow the output to exceed the set level.  It 'looks ahead' by the specified amount in order to make a smooth transition as it nears the limit level.  Clicking the right mouse button on the input or limit control will reset the value to 0.0.  Clicking the right mouse button on the input or limit meters will reset the peak indicator to the current level.
+    Omezovač dívající se dopředu je stěnovým omezovačem, který nedovolí výstupu, aby překročil nastavenou úroveň. "Dívá se dopředu" o zadané množství, aby udělal jemný přechod, jakmile se přiblíží mezní úrovni. Klepnutí pravým tlačítkem myši na vstup nebo ovládání omezení nastaví hodnotu znovu na 0.0. Klepnutí pravým tlačítkem myši na vstup nebo měřidla omezení nastaví ukazatele vrcholu (nejvyššího bodu) znovu na současnou úroveň.
+frTextTexteczChoose source for spectrum displayVybrat zdroj pro zobrazení spektraruSplined length %d does not match BINS / 2 - 1 (%d)Отмеренная длина %d не совпадает с BINS / 2 - 1 (%d)frToggle the mid band delay (set in Preferences)Active le retard de la bande médiums (réglé dans les préférences)cz_RedoZ_novuruAmount На сколькоfr_Undo_DéfaireruAllocating x in set_EQX размещается в set_EQru251 Hz251 ГцczLow : %d - %dNízký kmitočet: %d - %dfrPre EQ spectrum         Spectre pré-égalisation rudisconnecting port %s from %s
+порт %s отсоединяется от %s
+czSave _AsUložit _jakoczSet the maximum gain level for the EQNastavit úroveň největšího zesílení pro ekvalizérczHighVysoký kmitočetru317 Hz317 Гцcz1.000 ms1.000 msfrStopped | some CPU | some frames | 96000 Hz | Focus - somethingArrêté | some CPU | some frames | 96000 Hz | Focus - somethingfr%dHz , EQ : %.1fdb , Spectrum : %ddb%dHz , Correction : %.1fdb , Spectre : %ddbczunable to disconnect port %s
+Nelze odpojit přípojku %s
+fr<i><b>Crossover Type</b></i><i><b>Type de filtre séparateur</b></i>frBypass low band compressor processingDésactive la bande graves du compresseurczplay transportPřehrátczpan_labelštítek_vyváženícz    The compressors allow you to set compression parameters for each compressor band.  The bands are defined by the crossover that can be set using the crossover faders or the crossover bars in the HDEQ.  The parameters are, from left to right:
+
+    A - attack in milliseconds
+    R - release in milliseconds
+    T - threshold in db
+    r - compression ratio (N:1)
+    K - knee (0.0 [hard] to 1.0 [soft])
+    M - makeup gain in db
+    Note that the value label for makeup gain is also the automatic makeup gain button.  Pressing this will cause JAMin to try to approximate the optimum makeup gain for the other settings.  When pressed you cannot manually adjust the makeup gain however, adjustments to the threshold or ratio will cause the makeup gain to change.
+    A full explanation of the use of these parameters is covered in the user manual.
+    Compressor controls can be "ganged" by clicking on the control label in the desired compressor band windows.  When they are ganged moving one control will move all other ganged controls by the same amount.  To ungang just click on the label again.  The labels change to the band color to indicate that they are ganged.
+    Kompresory vám umožňují nastavení parametrů stlačení u každého pásma kompresoru.  Pásma jsou stanovena přechodem, který lze nastavit pomocí přechodových prolínačů nebo přechodových pruhů v ručně kresleném ekvalizéru. Parametry jsou, zleva doprava:
+
+    A - náběh v milisekundách - (attack)
+    R - uvolnění v milisekundách - (release)
+    T - práh v dB - (threshold)
+    r - poměr stlačení (N:1) - (ratio)
+    K - koleno (0.0 [tvrdé] až do 1.0 [měkké]) - (knee)
+    M - doplněné zesílení dB - (makeup gain)
+    Všimněte si, že štítek s hodnotou pro doplněné zesílení je rovněž tlačítko pro automatické doplnění zesílení.  Jeho stisknutí způsobí, že se JAMin pokusí přibližně odhadnout nejlepší doplnění zesílení pro jiná nastavení.  Když je stisknuto, nemůžete ručně upravovat doplnění zesílení, nicméně, úpravy prahu nebo poměru způsobí změnu v doplněném zesílení.
+    Úplné vysvětlení používání těchto parameters je pokryto v uživatelské příručce.
+    Ovládání kompresoru je možné "spřáhnout" klepnutím na ovládací štítek v požadovaných oknech kompresorových pásem.  Když už jsou zapojeny dohromady, pohyb jednoho ovládání pohne se všemi ostatními spřaženými ovládáními ve stejném množství.  Pro vypřažení jednoduše na štítek klepněte znovu.  Aby štítky daly najevo, že jsou spřaženy, změní svou barvu na barvu pásma.
+ru    JAMin would not be functional without many other open source packages and we thought that it would only be right to list them here:
+
+    JACK - JACK Audio Connection Kit
+    http://jackit.sourceforge.net
+
+    SWH plugins - Steve Harris' LADSPA plugins
+    http://plugin.org.uk
+
+    LADSPA - Linux Audio Developer's Simple Plugin API
+    http://www.ladspa.org
+
+    FFTW - Fastest Fourier Transform in the West
+    http://www.fftw.org
+
+    libsndfile - Erik de Castro Lopo's sound file I/O
+    http://www.zip.com.au/~erikd/libsndfile
+
+    GTK - The GIMP Toolkit
+    http://www.gtk.org
+
+    ALSA - Advanced Linux Sound Architecture
+    http://www.alsa-project.org
+
+Many thanks to all of the authors of these packages!
+Программа JAMin появилась на свет благодаря ряду технологий, без которых её создание было бы невозможным. Мы считаем правильным перечислить эти технологии и реализующие их приложения:
+
+JACK - Звуковой сервер реального времени
+http://jackit.sourceforge.net
+
+SWH plugins - LADSPA-модули, которые создал Steve Harris
+http://plugin.org.uk
+
+LADSPA - Интерфейс прикладного программирования для 
+создания звуковых модулей
+http://www.ladspa.org
+
+FFTW - Свободная реализация быстрых преобразований Фурье
+http://www.fftw.org
+
+libsndfile - Библиотека для I/O звука, которую написал Erik de Castro Lopo
+http://www.zip.com.au/~erikd/libsndfile
+
+GTK - Библиотека графических элементов интерфейса
+http://www.gtk.org
+
+ALSA - Современная звуковая подсистема Linux
+http://www.alsa-project.org
+
+Мы благодарим авторов этих разработок за их вклад!
+ruAssign settings to buttonНастроить клавишуczCrossoverPřechodru%s: Cannot contact JACK server, is it running?
+%s: Не удаётся соединиться с JACK-сервером. Он запущен?
+frAttackAttaqueczThis is free software, and you are welcome to redistribute it
+under certain conditions; see the file COPYING for details.
+Je to svobodný program a vaše pomoc s jeho dalším šířením je vítána
+za určitých podmínek; kvůli podrobnostem se podívejte na soubor COPYING.
+fr<b>Low : 00000 - 00000</b><b>Graves : 00000 - 00000</b>czMeter OverMěření přesáhlo horní mezczCannot connect output port "%s"
+Nelze spojit výstupní přípojku "%s"
+czParametric HandlesParametrické úchopyczGainZesílenífrAbout _JAMinÀ propos de _JAMinfrSelect ColorRégler la couleurczKneeKolenofr%ddb , %dHz - %dHz%ddb , %dHz - %dHzczDisconnectedOdpojenoczJACK Audio Mastering interfaceJACK Audio Mastering interfaceczNameNázevfr<i><b>Spectrum</b></i><i><b>Spectre</b></i>frCouldn't find pixmap file: %sFichier pixmap introuvable: %sczX=input db , Y=output dbX=vstup dB , Y=výstup dBru    The graphic EQ (GEQ) can be used to set gain for specific bands of the audio spectrum.  The center of the band is annotated at the bottom of each fader.  Setting a fader in the GEQ will override the HDEQ in the immediate vicinity of the changed fader and cause that curve to be redrawn.  It will not override the parametric notch settings in the HDEQ.  Clicking the right mouse button on a GEQ control will reset the value to 0.0.
+    Графический эквалайзер (GEQ) может использоваться для установки усиления определённых полос спектра звуковых частот. Центр полосы указывается в нижней части каждого фейдера.  Изменение любого фейдера в GEQ тут же отразится на HDEQ, где кривая будет соответствующим образом перерисована.  Однако, параметры параметрических отметок в HDEQ изменены не будут. Щелчок правой кнопкой мыши по регулятору GEQ сбрасывает значение до 0.0.
+czDon't change this pixmap!!!Neměňte tento obrázek (pixmapa)!ru_Redo_Повторитьcz251 Hz251 HzfrRRczAmount Množství ru%s  |  %4.1f%% CPU  |  %d xruns  |  %<PRIu32> frames  |  %<PRIu32> Hz%s%s  |  %4.1f%% CPU  |  %d рассинхр.  |  %<PRIu32> выборок  |  %<PRIu32> Гц%sruSave _AsСохранить _какruHighВысокиеfr_Help_AidefrBypass mid band compressor processingDésactive la bande médiums du compresseurruLow : %d - %dНизкие: %d - %dfrOutSortiecz317 Hz317 Hzru1.000 ms1,000 мсfrunable to connect from %s
+connexion impossible depuis %s
+ruNo physical playback ports foundНе найдено ни одного физического 
+порта воспроизведенияfr<b><i>Output Meter Numeric Display</i></b><b><i>Affichage numérique VU-mètre sortie</i></b>cz
+JAMin is the JACK Audio Mastering interface.  JAMin is designed to perform professional audio mastering of any number of input streams.  It consists of a number of tools to do this: a 1024 band hand drawn EQ with modifiable parametric controls, a 31 band graphic EQ, 3 band compressor, 3 band stereo width control, lookahead limiter, boost, and a number of other features.
+JAMin je zkratka pro JACK Audio Mastering interface. JAMin je navržen pro to, aby dělal profesionální hlavní nahrávku zvuku, ze které se dají pořizovat kopie, z jakéhokoli počtu vstupních proudů. Skládá se, aby to dělal, z určitých nástrojů: 1024 pásmový ručně kreslený ekvalizér s upravitelným parametrickým ovládáním, a jednatřiceti pásmový obrazový ekvalizér, třípásmový kompresor, třípásmové ovládání šířky sterea, omezovač dívající se dopředu, zesilovač, a množství jiných vlastností.frcentrecentreruCrossoverКроссоверruMid to High Band CrossoverКроссовер средних--высокихfrconnecting port %s to %s
+connexion port %s à %s
+rupan_labelпан_меткаruplay transportвоспроизвестиfrBypass high band compressor processingDésactive la bande aigües du compresseurfr<b>Mid : %d - %d</b><b>Médiums : %d - %d</b>frHigh Band CompressorCompresseur bande aigüesruGainУсилениеruMeter OverПревышение уровняruParametric HandlesПараметрические органы управленияfrMid Band CompressorCompresseur bande médiumsruDisconnectedОтсоединеноruNameИмяfrClear settings from buttonVide les paramètres du boutonfrMeter PeakCrête VU-mètrefrX=input db , Y=output dbX=entrée dB , Y=sortie dBruKneeИзгибruGroupsГруппыfrAuto makeupRattrapage automatiqueczPost EQPo ekvalizérfr<b>Spectrum</b><b>Spectre</b>frRatioRatiocz125 Hz125 HzczScene X NameNázev scény Xcz8000 Hz8000 Hzcz30 band EQTřicetipásmový ekvalizérfr<b>Boost</b><b>Boost</b>czHH:MM:SS:xxHH:MM:SS:xxcz503503ruPost CompressorПосткомпрессорru6k6кru    The hand drawn EQ (HDEQ) allows the user to draw the EQ curve using the mouse.  The curve is then splined to fill 1024 EQ bands.  There are a number of other options available in the HDEQ.  There are user defined notches that act as a parametric EQ.  There are also crossover controls that will allow the user to change the compressor crossover points.  The following is a quick guide to using the HDEQ:
+
+    In the background window - left click and release to begin drawing the curve.  Left click again to end the curve.  You can define any portion of the curve, you don't have to define the entire curve.  Drawing can be done from left to right or right to left.  If you try to reverse direction while drawing the data in the reverse direction will be ignored.  You can discard the curve that you are drawing by clicking the middle or right buttons.  Clicking the right mouse button in the HDEQ when not drawing a curve will reset all EQ and notch values to their original (flat) settings.
+
+    Over the crossover bar handles - left click and hold to drag the crossover bars.
+
+    Over the notch handles - left click and hold to drag the notch center or cuttoff frequency and gain.  <Ctrl>-left click will reset the notch to 0.  If you hold the shift key while adjusting the notch handle it will only move in the Y (gain) direction.
+
+    Over the notch width handle - left click and hold to widen or narrow the notches, except the high and low cutoff notches which have no width handles.
+    HDEQ позволяет пользователю рисовать кривую эквализации при помощи мыши.  Кривая автоматически делится наl 1024 полосы эквалайзера.  Помимо того, в HDEQ есть устаналиваемые пользователем отметки, добавляющие возможность параметрической эквализации.  Помимо того, есть регуляторы кроссовера, позволяющие пользователю менять точки кросссовера компрессора.  Ниже приводится короткое руководство по использованию HDEQ:
+
+    Щёлкните по изображению графика левой клавишей мыши и нарисуйте кривую, а затем щёлкните левой клавишей мыш ещё раз для завершения.  Не обязательно рисовать всю кривую целиком -- достаточно нарисовать её часть. Рисовать можно как слева направо так и справа налево. Если вы попробуете изменить направление во время рисования, это будет проигнорировано. От нарисованной кривой до её завершения (по щелчку левой клавишей мыши) можно отказаться, щёлкнув средней или правой клавишами мыши.  Щелчок правой клавишей мыши по графику HDEQ вне режима рисования "обнулит" все внесённые изменения.
+
+    Над регуляторами кроссовера - щёлкнуть левой клавишей мыши, и удерживая эту клавишу нажатой, перемещать регуляторы.
+
+    Над регуляторами отметок - щёлкнуть левой клавишей мыши, и удерживая эту клавишу нажатой, перемещать центр отметок или частоту вырезания и усиление.  <Ctrl>+ щелчок левой клавишей мыши сбросит значение отметки на 0.  Если при перемещении регулятора отметки удерживать <Shift>, то отметка будет перемещаться только по горизонтали.
+
+    Над регуляторами ширины отметок - щёлкнуть левой клавишей мыши, и удерживая эту клавишу нажатой, расширять или сужать отметки. Это не относится к отметкам низко- или высокочастотного среза, у которых нет регуляторов ширины.
+frLimiter bypassDésactiver limiteurczunable to disconnect %s from %s
+Nelze odpojit %s z %s
+fr<b>Input</b><b>Entrée</b>frChange the crossfade time for scene changesChange le temps de fondu enchaîné pour les changements de scènefrbackward transportdéplacer en arrièreczMid : %d - %dStřední kmitočet: %d - %dfrOutput meter levelNiveau VU-mètrecz2000 Hz2000 HzruMMfr<b>Compressor curves</b><b>Courbes de compression</b>ruEQ bypassОбход EQruDon't change this pixmap!!!Не меняйте это изображение!!!ru400400cz800 Hz800 HzruClearОчиститьczTPráhcz    The output control allows you to decrease the output level.  The upper level is 0dB.  Clicking the right mouse button on the output control will reset the value to 0.0.  Clicking the right mouse button on the meter will reset the peak indicator to the current level.
+    Ovládání výstupu vám umožňuje snížení úrovně výstupu. Horní úroveň je 0 dB. Klepnutí pravým tlačítkem myši na ovládání výstupu nastaví hodnotu znovu na 0.0. Klepnutí pravým tlačítkem myši na měřidlo nastaví ukazatele vrcholu (nejvyššího bodu) znovu na současnou úroveň.
+czMeter WarningVarování při měřeníczMinimum gain (db):Nejmenší zesílení (dB):ruLimiterОграничительfrRMS meter levelNiveau VU-mètre RMScz200 Hz200 Hzcz    This button allows you to bypass limiting.  It has no effect on any of the other controls.
+    Toto tlačítko vám umožní obejít omezování. Nemá žádný účinek na jakékoli jiné ovládání.
+cz3k23,2 kHzcz634634czOutput spectrum         Výstupní spektrumru158 Hz158 Гцru100100fr<i><b>Crossfade</b></i><i><b>Fondu enchaîné</b></i>czGroupsSkupinyczCannot connect input port "%s"
+Nelze spojit vstupní přípojku "%s"
+ru8000 Hz8000 ГцruScene X NameИмя сцены Xru125 Hz125 ГцruPost EQПосле эквализацииfr<b>High : %d - %d</b><b>Aigües : %d - %d</b>fr_Keys_Touchesru503503czPost CompressorPo kompresorcz6k6 kHzcz%s: not permitted to create realtime DSP thread.
+	You must run as root or use JACK capabilities.
+	Continuing operation, but with -t option.
+%s: není dovoleno vytvoření vlákna DSP ve skutečném čase.
+	Musíte spustit jako správce nebo použít schopnosti serveru JACK.
+	V operaci se pokračuje, ale s volbou -t.
+ru30 band EQ30-полосный EQruHH:MM:SS:xxЧЧ:ММ:СС:xxruMid : %d - %dСредние: %d - %dczEQ bypassObejít ekvalizérczMDoplněnífr_File_FichierfrPost EQ spectrum        Spectre post-égalisation ru2000 Hz2000 ГцruThis is free software, and you are welcome to redistribute it
+under certain conditions; see the file COPYING for details.
+Это свободное программное обеспечение, мы приветствуем его
+ распространение на условиях, приведённых в файле COPYING.
+czunable to connect from %s
+Nelze se připojit z %s
+ruChange the crossfade time for scene changesИзменить время кроссфейда при смене сценыfr<b><i>Band Delays</i></b><b><i>Retards des bandes</i></b>ruTTczClearVymazatru800 Hz800 Гцcz    This allows you to set the input to the spectrum computation for both the Spectrum window and the HDEQ.  The default is Post EQ.  The other options are Pre EQ, Post compressor, and Output.
+    Toto vám umožní nastavit vstup pro výpočet spektra jak pro okno se spektrem tak pro ručně kreslený ekvalizér. Výchozím je Po ekvalizér. Jinými volbami jsou Před ekvalizér, Po kompresor a Výstup.
+ruMeter WarningУровень предупрежденияruLow to Mid Band CrossoverКроссовер низких--среднихcz400400ruChange the spectrum update frequencyИзменить частоту обновления спектраczClose the Preferences windowZavřít okno s nastavenímruMinimum gain (db):Минимальное усиление (Дб):cz    The stereo width controls define the apparent 'wideness' of the stereo signal for each of the three bands.  The bands are defined by the crossovers that can be set using the crossover faders or the crossover bars in the HDEQ.  More negative values decrease the 'width' while positive values increase the 'width'.  Clicking the right mouse button on the stereo width control will reset the value to 0.0.
+    Ovladače šířky sterea určují zdánlivou "širokost" stereo signálu pro každé ze tří pásem. Pásma jsou stanovena přechody, které lze nastavit pomocí přechodových prolínačů nebo přechodových pruhů v ručně kresleném ekvalizéru. Zápornější hodnoty "šířku" zmenšují, zatímco kladné hodnoty "šířku" zvětšují. Klepnutí pravým tlačítkem myši na ovládání šířky sterea nastaví hodnotu znovu na 0.0.
+ru3k23к2ru200 Hz200 Гцru634634ruCannot connect output port "%s"
+Не удаётся подсоединить порт выхода "%s"
+frAbout JAMinÀ propos de JAMinfr_FFT_FFTczLimiterOmezovačfrLow Band CompressorCompresseur bande gravesruClear settings from buttonУдалить настройки клавишиfr%s: Cannot register JACK ports.%s: Impossible d'enregistrer les ports JACK.cz158 Hz158 Hzcz100100ru1k21к2cz_KeysKlávesyruAuto makeupАвтомэйк-апcz8k8 kHzruRatioКоэффициентfrJACK Audio Mastering interfaceInterface de masterisation JACK Audioru1500 Hz1500 ГцruHigh Band BypassОбход высокихfrCancelAbandonnerfrGroupsGroupesczClear settings from buttonVymazat nastavení k tlačítkufrMid to High Band CrossoverFréquence de Coupure Médiums/Aigüesru    JAMin is the JACK Audio Mastering interface.
+
+    Web site: <http://jamin.sourceforge.net>
+
+    JAMin is designed to perform professional audio mastering of any number of input streams.  It consists of a number of tools to do this: a 1024 band hand drawn EQ with modifiable parametric controls, a 31 band graphic EQ, 3 band compressor, 3 band stereo width control, lookahead limiter, boost, and a number of other features.
+
+    Steve Harris is the JAMin principle author and team leader.
+
+    SourceForge CVS developers, in alphabetical order:
+
+    Jan Depner
+    Steve Harris
+    Jack O'Quin
+    Ron Parker
+    Patrick Shirkey
+
+    JAMin is released under the GNU General Public License and is copyright (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, and P. Shirkey. 
+    This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    JAMin - это приложение для мастеринга звука, работающее через сервер JACK.
+
+    Веб-сайт: <http://jamin.sourceforge.net>
+
+    JAMin спроектирован для профессионального мастеринга звука, посылаемого с любого количества источников.  Программа  состоит из нескольких инструментов: 1024-полосного рисуемого от руки эквалайзера  с изменяемыми параметрическими точками контроля, 31-полосного графического эквалайзера, 3-полосного компрессора, 3-полосного контроллера стереопанорамы, lookahead-ограничитель (лимитер), усиление сигнала и некоторые другие.
+
+    Архитектором и основным разработчиком JAMin является Steve Harris.
+
+    Разработчики, имеющие доступ на запись в проект на SourceForge CVS (в алфавитном порядке):
+
+    Jan Depner
+    Steve Harris
+    Jack O'Quin
+    Ron Parker
+    Patrick Shirkey
+
+    JAMin выпущен под лицензией GNU General Public License. Авторские и смежные права: (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, и P. Shirkey. 
+    Это свободная программа; вы можете повторно распространять ее и/или модифицировать ее в соответствии с Универсальной Общественной Лицензией GNU, опубликованной Фондом Свободного ПО; либо версии 2, либо (по вашему выбору) любой более поздней версии..
+    Эта программа распространяется в надежде, что она будет полезной, но БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ; даже без подразумеваемых гарантий КОММЕРЧЕСКОЙ ЦЕННОСТИ или ПРИГОДНОСТИ ДЛЯ КОНКРЕТНОЙ ЦЕЛИ.  Для получения подробных сведений смотрите Универсальную Общественную Лицензию GNU.
+    Вы должны были получить копию Универсальной Общественной Лицензии GNU вместе с этой программой; если нет, напишите по адресу: Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ruLimiter bypassОбход ограничителяruBoostПодъёмfrMGruCompressor curvesКривые компрессораcz_File_Souborcz2k2 kHzcz    The graphic EQ (GEQ) can be used to set gain for specific bands of the audio spectrum.  The center of the band is annotated at the bottom of each fader.  Setting a fader in the GEQ will override the HDEQ in the immediate vicinity of the changed fader and cause that curve to be redrawn.  It will not override the parametric notch settings in the HDEQ.  Clicking the right mouse button on a GEQ control will reset the value to 0.0.
+    Obrazový ekvalizér se dá použít pro nastavení zesílení určitých pásem zvukového spektra. Střed pásma je opatřen poznámkou u paty každého prolínače. Nastavení prolínače v obrazovém ekvalizéru přebije ručně kreslený ekvalizér v bezprostředním okolí změněného prolínače a způsobí překreslení křivky. Nedojde k potlačení parametrických nastavení stupínků v ručně kresleném ekvalizéru. Klepnutí pravým tlačítkem myši na ovládání obrazového ekvalizéru nastaví hodnotu znovu na 0.0.
+frEQ bypassDésactiver égaliseurru    Keyboard accelerators are available for many of the functions in JAMin:
+
+	b			-	Bypass
+	Space		-	Toggle play and pause
+	Home		-	Position transport to beginning
+	<			-	Move transport backwards 5 sec.
+	>			-	Move transport forwards 5 sec.
+	1-0			-	Select scene 1-10
+	<Shift>-1-0	-	Select scene 11-20
+					<Alt> will set scene, <Ctrl> will clear
+	<Ctrl>-o		-	Open session file
+	<Ctrl>-s		-	Save to current session file
+	<Ctrl>-a		-	Save session file as new session file
+	<Ctrl>-q		-	Quit
+	<Ctrl>-u		-	Undo
+	<Ctrl>-r		-	Redo
+	<Ctrl>-h		-	General help
+	F1			-	Set the notebook tab to HDEQ
+	F2			-	Set the notebook tab to 30 band EQ
+	F3			-	Set the notebook tab to Spectrum
+	F4			-	Set the notebook tab to Compressor 
+ 					curves
+	F5			-	Set the notebook tab to the EQ 
+ 					Options
+	<Ctrl>-k		-	Keyboard accelerator help (this 
+ 					screen)
+	<Ctrl>-j		-	About JAMin
+    Для многих действий в JAMin есть горячие клавиши:
+
+	b			-	Обход
+	Space		-	Воспроизведение или пауза
+	Home		-	Перемотать на начало
+	<			-	Перемотать на 5 секунд назад.
+	>			-	Перемотать на 5 секунд вперёд.
+	1-0			-	Выбрать сцену 1-10
+	<Shift>-1-0	-	Выбрать сцену 11-20
+					<Alt> установить сцену, <Ctrl> очистить её
+	<Ctrl>-o		-	Открыть файл сессии
+	<Ctrl>-s		-	Сохранить текущую сессию
+	<Ctrl>-a		-	Сохранить сессию в новый файл
+	<Ctrl>-q		-	Выйти
+	<Ctrl>-u		-	Отменить действие
+	<Ctrl>-r		-	Повторить действие
+	<Ctrl>-h		-	Помощь
+	F1			-	Перейти во вкладку HDEQ
+	F2			-	Перейти во вкладку c 30-полосным EQ
+	F3			-	Перейти во вкладку со спектральным анализатором
+	F4			-	Перейти во вкладку с компрессором
+ 					curves
+	F5			-	Перейти во вкладку EQ 
+ 					Параметры
+	<Ctrl>-k		-	Справка по горячих клавишам
+ 					 (которая сейчас отображается)
+	<Ctrl>-j		-	О JAMin
+rubackward transportв началоru20000 Hz20 000 ГцruScenesСценыfrOutput levelNiveau de sortieczDevelopersVývojářifrPost CompressorPost-compresseurru6000 Hz6000 ГцfrLow bandBande GravesfrReset HDEQ curveRéinitialiser courbe égaliseur HDcz2k52,5 kHzfrRMS meter peakCrête VU-mètre RMScz    Keyboard accelerators are available for many of the functions in JAMin:
+
+	b			-	Bypass
+	Space		-	Toggle play and pause
+	Home		-	Position transport to beginning
+	<			-	Move transport backwards 5 sec.
+	>			-	Move transport forwards 5 sec.
+	1-0			-	Select scene 1-10
+	<Shift>-1-0	-	Select scene 11-20
+					<Alt> will set scene, <Ctrl> will clear
+	<Ctrl>-o		-	Open session file
+	<Ctrl>-s		-	Save to current session file
+	<Ctrl>-a		-	Save session file as new session file
+	<Ctrl>-q		-	Quit
+	<Ctrl>-u		-	Undo
+	<Ctrl>-r		-	Redo
+	<Ctrl>-h		-	General help
+	F1			-	Set the notebook tab to HDEQ
+	F2			-	Set the notebook tab to 30 band EQ
+	F3			-	Set the notebook tab to Spectrum
+	F4			-	Set the notebook tab to Compressor 
+ 					curves
+	F5			-	Set the notebook tab to the EQ 
+ 					Options
+	<Ctrl>-k		-	Keyboard accelerator help (this 
+ 					screen)
+	<Ctrl>-j		-	About JAMin
+    Klávesnicové urychlovače jsou dostupné pro mnohé z funkcí v JAMinu:
+
+	b			-	Obejít
+	Space		-	Přepnout přehrávání a pozastavení
+	Home		-	Přesunout ukazatel polohy na začátek
+	<			-	Přesunout dozadu o 5 sekund
+	>			-	Přesunout dopředu o 5 sekund.
+	1-0			-	Vybrat scénu 1-10
+	<Shift>-1-0	-	Vybrat scénu 11-20
+					<Alt> nastaví scénu, <Ctrl> vymaže
+	<Ctrl>-o		-	Otevřít soubor se sezením
+	<Ctrl>-s		-	Uložit do nynějšího souboru se sezením
+	<Ctrl>-a		-	Uložit soubor se sezením jako nový soubor se sezením
+	<Ctrl>-q		-	Ukončit
+	<Ctrl>-u		-	Zpět
+	<Ctrl>-r		-	Znovu
+	<Ctrl>-h		-	Obecná nápověda
+	F1			-	Nastavit kartu zápisníku na Ručně kreslený ekvalizér
+	F2			-	Nastavit kartu zápisníku na Třicetipásmový ekvalizér
+	F3			-	Nastavit kartu zápisníku na Spektrum
+	F4			-	Nastavit kartu zápisníku na Křivky stlačovače
+	F5			-	Nastavit kartu zápisníku na Volby ekvalizéru
+	<Ctrl>-k		-	Nápověda ke klávesnicovým urychlovačům (tato obrazovka)
+	<Ctrl>-j		-	O JAMinu
+ruSpectrumСпектрruGraphic EQГрафический EQczChange the spectrum update frequencyZměnit obnovovací kmitočet spektrafrDelayRetardfrClearViderruSet colors for GUI componentsИзменить цветовую схему элементов интерфейсаcz6262czLow Band CompressorKompresor nízkého pásmaczAbout JAMinO programu JAMinru62 Hz62 ГцruWhat Is JAMinО JAMinfrToggle the low band delay (set in Preferences)Active le retard de la bande graves (réglé dans les préférences)ru    The compressors allow you to set compression parameters for each compressor band.  The bands are defined by the crossover that can be set using the crossover faders or the crossover bars in the HDEQ.  The parameters are, from left to right:
+
+    A - attack in milliseconds
+    R - release in milliseconds
+    T - threshold in db
+    r - compression ratio (N:1)
+    K - knee (0.0 [hard] to 1.0 [soft])
+    M - makeup gain in db
+    Note that the value label for makeup gain is also the automatic makeup gain button.  Pressing this will cause JAMin to try to approximate the optimum makeup gain for the other settings.  When pressed you cannot manually adjust the makeup gain however, adjustments to the threshold or ratio will cause the makeup gain to change.
+    A full explanation of the use of these parameters is covered in the user manual.
+    Compressor controls can be "ganged" by clicking on the control label in the desired compressor band windows.  When they are ganged moving one control will move all other ganged controls by the same amount.  To ungang just click on the label again.  The labels change to the band color to indicate that they are ganged.
+    Здесь можно указать различные параметры компрессии для каждой полосы.  Полпосы определяются при помощи кроссовера путём установки фейдеров в HDEQ.  Вот эти параметры:
+
+    A - атака в миллисекундах
+    R - затухание в миллисекундах
+    T - порог в децибелах
+    r - коэффициент компрессии (N:1)
+    K - кривая (от 0.0 [hard] до 1.0 [soft])
+    M - makeup gain in db
+    AM - automatic makeup gain computation
+
+    Подробное описание настройки этих параметров излагается в руководстве пользователя.
+    Регуляторы компрессора можно двигать одновременно, предварительно щёлкнув мышкой по метке контроллера в выбранных окнах компрессора.  Это позволит перемещать выбранные регуляторы одновременно на равное расстояние.  Для выхода из этого режима просто щёлкните ещё раз по метке.  В этом синхронном режиме метки меняют цвет полосы, чтобы показать, что они синхронны.
+frHDEQ SpectrumSpectre égaliseur HDfrScene X NameNom Scène XfrSet the maximum gain level for the EQsRègle le niveau de gain maximal des égaliseursru8k8кczRatioPoměrru_Keys_Клавишиcz1k21,2 kHzfrPost EQPost-égalisationczAuto makeupAutomatické doplněnífrClose the Preferences windowFerme la fenêtre de Préférencesfrunable to connect %s to %s
+connexion de %s à %s impossible
+czHigh Band BypassObejít vysoké pásmoruCouldn't find pixmap file: %sНе удалось найти изображение: %scz1500 Hz1500 Hzru2k2кru_File_ФайлczCompressor curvesKompresní křivkyczBoostZesilovačczbackward transportZpětczHPA biasZkreslení HPAczLimiter bypassObejít omezovačcz6000 Hz6000 HzfrBypass boost and limiter processingDésactive le boost et le limiteurfrHH:MM:SS:xxHH:MM:SS:xxcz20000 Hz20000 Hzfr%s internal error %d: %s
+%s erreur interne %d: %s
+ruDevelopersАвторыczScenesScényru2k52к5frMeter WarningAlerte VU-mètreczGraphic EQObrazový ekvalizérfrTSfr<b>Limiter</b><b>Limiteur</b>czAllocating x in set_EQPřiděluje se x v set_EQczSpectrumSpektrumruLow Band CompressorКомпрессор низкихru6262czAllocating EQ_yinput in callbacks.cPřiděluje se EQ_yinput v callbacks.cczWhat Is JAMinCo je to JAMincz62 Hz62 Hzczjam error: Adjustment from out-of-range band %d requested
+Chyba v jam: Je požadována úprava z pásma mimo dosah %d
+ruAbout JAMin_О JAMinfrunable to disconnect port %s
+déconnexion du port %s impossible
+czHigh Band Stereo WidthŠířka sterea ve vysokém pásmufrAmount Quantitécz    The adjustable crossover is used to split the entire audible range into three sections.  It applies to the compressors and stereo widths. If the crossovers are set to 500Hz and 5KHz then the first stereo width control and compressor works for 25-500Hz, the second for 500Hz-5KHz, and the last for 5KHz-20KHz.  The crossover has no effect on the HDEQ unless one or more bands are soloed.  The crossover bars that are visible in the HDEQ serve as a visual reference.
+    Upravitelný přechod se používá k rozdělení celého slyšitelného rozsahu do tří částí. Využívá se na kompresor a šířky sterea. Pokud jsou přechody nastaveny na 500 Hz a 5 kHz, potom první ovládání šířky sterea a kompresor pracují pro 25 až 500 Hz, druhé pro 500 Hz až 5 kHz a poslední pro 5 kHz-20 kHz. Přechod nemá žádný účinek na ručně kreslený ekvalizér, dokud není pro jedno nebo více pásem zavedeno sólo. Pruhy přechodu, které jsou viditelné v ručně kresleném ekvalizéru slouží coby zrakové doporučení.
+ru_Undo_ОтменитьczRUvolněníczAllocating y in callbacks.cPřiděluje se y v callbacks.cczAssign settings to buttonPřiřadit nastavení k tlačítkuruTextТекстczfilter tuning [DEBUG]Vyladění filtru [LADĚNÍ]cz    The File menu has the standard options available.  Save and Save As allow you to save the scenes and settings for a session to a .jam file.  By default these are saved in the $HOME/.jamin directory but may be saved anywhere.
+    The Edit menu has undo and redo options for changes to the settings.
+    The Ports menu allows you to set the input and output ports for JAMin.
+    The Options menu has EQ Options and Preferences entries.  The EQ Options dialog allows you to set the minimum and maximum gain level in dB for both the HDEQ and GEQ.  You can also set the source of the spectrum for both the HDEQ and spectrum windows.  Spectrum update frequency can be set here as well.  Up to 10 per second (default) and down to 0 (disabled).
+    Colors may be changed in the Options->Preferences dialog.  These colors are saved in the file $HOME/.jamin-defaults.  This is done whenever you exit from JAMin.  You can actually edit this file and change the colors by hand.  They are just RGB values in the 0-65535 range but it's much easier to use the GUI ;-).  You may also set the crossfade time and crossover type in this dialog (see the man page for more information on crossfade time and crossover type).
+    For help on the rest of the GUI, context specific help can be obtained by moving the mouse pointer into one of the tool areas (compressor, EQ, limiter, input, etc) and pressing <Shift><F1>.
+    V nabídce Soubor se nacházejí běžné volby.  Uložit a Uložit jako vám umožňují uložit scény a nastavení sezení do souboru .jam.  Ve výchozím nastavení sou ukládány v adresáři $HOME/.jamin, ale je možné je ukládat kdekoli.
+    Nabídka Úpravy má volby Zpět a Znovu pro změny v nastaveních.
+    Nabídka Přípojky vám umožňuje nastavit vstupní a výstupní přípojky pro JAMin.
+    Nabídka Volby má volby pro ekvalizér a položky pro nastavení.  Okno s volbami pro ekvalizér vám umožňuje nastavit nejnižší a nejvyšší úroveň zesílení v dB jak pro ručně kreslený ekvalizér tak pro obrazový ekvalizér.  Také můžete nastavit zdroj spektra jak pro okno ručně kresleného ekvalizéru tak pro okno se spektrem.  Kmitočet obnovy spektra je zde možné nastavit taktéž.  Směrem nahoru po 10 za sekundu (výchozí) a dolů do 0 (zakázáno).
+    Barvy se dají změnit v dialogu Volby->Nastavení.  Tyto barvy jsou uloženy v souboru $HOME/.jamin-defaults.  Dělá se to vždycky při ukončení JAMinu.  Tento soubor můžete upravovat a barvy měnit ručně.  Jsou to prostě hodnoty RGB v rozsahu 0-65535, ale je daleko snadnější použít k tomu rozhraní ;-).  V tomto okně také můžete nastavit čas prolínání a typ přechodu (více informací k času prolínání a typu přechodu hledejte na stránkách s návodem).
+    Nápovědu ke zbytku rozhraní, nápovědu odvíjející se podle okolností je možné obdržet přesunutím ukazatele myši do jedné z oblastí s nástroji (kompresor, ekvalizér, omezovač, vstup atd.) a stisknutím <Shift><F1>.
+czOutVýstupfrOutput spectrum         Spectre en sortie       frFFT is more CPU intensive but is the best choiceFFT (Transformée de Fourier Rapide) est plus consommateur de ressources CPU mais est le meilleur choixczPost compressor spectrumSpektrum po kompresorucz_Help_Nápovědacz20k20 kHzruunable to disconnect %s from %s
+не удаётся отсоединить %s от %s
+ruAttackАтакаczcentreStředfr(C) 2003-2005 J. Depner, S. Harris, J. O'Quin, R. Parker and P. Shirkey
+(C) 2003-2005 J. Depner, S. Harris, J. O'Quin, R. Parker et P. Shirkey
+frMid bandBande MédiumsfrCannot connect input port "%s"
+Impossible de se connecter au port d'entrée "%s"
+czdisconnecting port %s from %s
+Odpojuje se přípojka %s z %s
+ruSelect ColorВыбрать цветczMeter PeakVrchol  při měřeníru%ddb , %dHz - %dHz%d Дб, %d Гц - %d ГцczMid Band CompressorKompresor středního pásmaczFFTFFTru
+JAMin is released under the GNU General Public License and is copyright (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, and P. Shirkey. 
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. 
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    JAMin выпущен под лицензией GNU General Public License. Авторские и смежные права: (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, и P. Shirkey. 
+    Это свободная программа; вы можете повторно распространять её и/или модифицировать её в соответствии с Универсальной Общественной Лицензией GNU, опубликованной Фондом Свободного ПО; либо версии 2, либо (по вашему выбору) любой более поздней версии..
+    Эта программа распространяется в надежде, что она будет полезной, но БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ; даже без подразумеваемых гарантий КОММЕРЧЕСКОЙ ЦЕННОСТИ или ПРИГОДНОСТИ ДЛЯ КОНКРЕТНОЙ ЦЕЛИ.  Для получения подробных сведений смотрите Универсальную Общественную Лицензию GNU.
+    Вы должны были получить копию Универсальной Общественной Лицензии GNU вместе с этой программой; если нет, напишите по адресу: Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.ruAbout _JAMin_О JAMinczHigh Band CompressorKompresor vysokého pásmaruRRcz_Undo_Zpětcz%s: Cannot contact JACK server, is it running?
+%s: Nelze se spojit se serverem JACK. Běží?
+ruUpdate frequency (Hz):Частота обновления (Гц):fr_Redo_Refairefr%s: Cannot activate JACK client.%s: Impossible d'activer le client JACK.fr<b>Scenes</b><b>Scènes</b>cz%s: Cannot activate JACK client.%s: Nelze zapnout klienta JACK.cz    This button will bypass all of JAMin's functions.  The keyboard accelerator for this button is the 'b' key.
+    Tímto tlačítkem se obejdou všechny funkce JAMinu. Klávesnicovým urychlovačem pro toto tlačítko je klávesa 'b'.
+czTextTextfr%s: JACK server started
+%s: le serveur JACK a démarré
+rufilter tuning [DEBUG]настройка фильтра [ОТЛАДКА]ru
+Web site: <http://jamin.sourceforge.net>
+
+Mailing list: http://lists.sourceforge.net/lists/listinfo/jamin-devel
+
+Project page: http://sourceforge.net/projects/jamin/
+Веб-сайт: <http://jamin.sourceforge.net>
+
+Список рассылки: http://lists.sourceforge.net/lists/listinfo/jamin-devel
+
+Страница проекта: http://sourceforge.net/projects/jamin/ruOutВыходruPre EQ spectrum         Спектр до эквализацииru
+Steve Harris is the JAMin principle author and team leader.
+
+SourceForge CVS developers, in alphabetical order:
+
+Jan Depner
+Steve Harris
+Jack O'Quin
+Ron Parker
+Patrick Shirkey
+
+Translators:
+
+Alexandre Prokoudine
+
+Архитектором и основным разработчиком JAMin является Steve Harris.
+
+Разработчики, имеющие доступ на запись в проект на SourceForge CVS (в  алфавитном порядке):
+
+Jan Depner
+Steve Harris
+Jack O'Quin
+Ron Parker
+Patrick Shirkey
+
+Переводчики:
+
+Александр Прокудин (на русский язык)
+fr1.000 ms1.000 msfrHighAigüesru_HelpПо_мощьfrSave _AsEnregistrer _sous...ru20k20кczAttackNáběhczFile %s : %s
+Using default.Soubor %s : %s
+Používá se výchozí.frCrossoverFiltre séparateurczSet colors for GUI componentsNastavit barvy součástí rozhranífrplay transportlecturefrGlobal bypassTout désactiverfr_Online_En lignerucentreпо центруcz
+Steve Harris is the JAMin principle author and team leader.
+
+SourceForge CVS developers, in alphabetical order:
+
+Jan Depner
+Steve Harris
+Jack O'Quin
+Ron Parker
+Patrick Shirkey
+
+Translators:
+
+Alexandre Prokoudine
+
+Steve Harris je hlavním autorem JAMinu a vedoucím družstva.
+
+Vývojáři CVS SourceForge, v abecedním pořadí:
+
+Jan Depner
+Steve Harris
+Jack O'Quin
+Ron Parker
+Patrick Shirkey
+
+Překladatelé:
+
+Alexandre Prokoudine
+Pavel Fric: fripohled.blogspot.com
+frAssign settings to buttonAssigne les paramètres au boutonfrReset All Colors To DefaultsRéinitialiser Toutes les CouleursruMeter PeakПик уровняczHPB biasZkreslení HPBfrDisconnectedDéconnectéfrNameNomcz%ddb , %dHz - %dHz%d dB , %d Hz - %d HzfrKneeTransitioncz    JAMin would not be functional without many other open source packages and we thought that it would only be right to list them here:
+
+    JACK - JACK Audio Connection Kit
+    http://jackit.sourceforge.net
+
+    SWH plugins - Steve Harris' LADSPA plugins
+    http://plugin.org.uk
+
+    LADSPA - Linux Audio Developer's Simple Plugin API
+    http://www.ladspa.org
+
+    FFTW - Fastest Fourier Transform in the West
+    http://www.fftw.org
+
+    libsndfile - Erik de Castro Lopo's sound file I/O
+    http://www.zip.com.au/~erikd/libsndfile
+
+    GTK - The GIMP Toolkit
+    http://www.gtk.org
+
+    ALSA - Advanced Linux Sound Architecture
+    http://www.alsa-project.org
+
+Many thanks to all of the authors of these packages!
+    JAMin by nemohl pracovat bez mnoha dalších balíčků s otevřeným zdrojovým kódem a myslíme si, že je jen správné, když je zde uvádíme:
+
+    JACK - JACK Audio Connection Kit
+    http://jackit.sourceforge.net
+
+    SWH plugins - Steve Harris' přídavné moduly LADSPA
+    http://plugin.org.uk
+
+    LADSPA - Linux Audio Developer's Simple Plugin API
+    http://www.ladspa.org
+
+    FFTW - Fastest Fourier Transform in the West
+    http://www.fftw.org
+
+    libsndfile - Erik de Castro Lopo's sound file I/O
+    http://www.zip.com.au/~erikd/libsndfile
+
+    GTK - sada nástrojů GIMP
+    http://www.gtk.org
+
+    ALSA - Advanced Linux Sound Architecture
+    http://www.alsa-project.org
+
+Vřelé díky všem autorům těchto balíčků!
+czSelect ColorVybrat barvufr<b>High : 00000 - 00000</b><b>Aigües : 00000 - 00000</b>czAbout _JAMinO programu _JAMinfrGainGainruHigh Band CompressorКомпрессор высокихfr%s: unique name `%s' assigned
+%s: nom unique `%s' attribué
+ruFFTFFTruMid Band CompressorКомпрессор среднихfrParametric HandlesPoignées paramétriquesfrMeter OverDépassement VU-mètrecz    Scenes are used to save and recall an entire group of JAMin parameter settings during a session.  After setting all of the parameters for a specific section of music (verse, chorus, bridge) or a complete song you can right click on a scene button, use the menu to 'Set' that scene, then use the 'Name' entry of the menu to enter a name for that scene (Back Alley Fugue - verse).  You can recall these settings by left clicking on the scene button.  A bright green button means that the scene associated with this button is currently the active scene.  A dull green button signifies that the scene is loaded but not active.  A red button means that the scene has no settings loaded.  A bright yellow button means that this scene is active but the settings have been changed.  If you want to save the settings you must use the 'Set' entry in the button's right click menu.  You can clear settings from a button using the right click menu and the 'Clear' entry.
+
+    The keyboard accelerators for the scene buttons are the number keys, 1 through 0 for scenes 1 through 10.  <Shift>-1 through <Shift>-0 will access scenes 11 through 20.  For example, pressing the 1 key will cause scene 1 to become active.  Pressing <Shift>-5 will cause scene 15 to become active.  The ALT modifier can be used to assign settings to a scene button (instead of using the scene button menus).  Pressing <Alt><Shift>-5 will assign the current settings to scene button 15 (you may still want to change the name).  The CTRL modifier can be used to clear a scene button.  Pressing <Ctrl>-4 will clear scene button 4.  
+
+    Note that the keypad keys may be used but only for scenes 1 through 10 with Num Lock on.  Using the keypad with Num Lock off will access the cursor keys (which can be used to control some aspects of the GUI).  Using <Shift> with the keypad with Num Lock on will also access the cursor keys.
+    Scény se používají pro uložení a opětovné vyvolání celé skupiny nastavení parametrů v JAMinu během sezení.  Po nastavení všech parametrů pro určitou část hudby (verš, sbor, most) nebo pro celou píseň můžete klepnout pravým tlačítkem myši na tlačítko pro scénu. Použijte nabídku pro nastavení oné scény, pak použijte položku "Název" v nabídce pro zadání názvu té scény (Back Alley Fugue - verš).  Tato nastavení můžete vyvolat znovu klepnutím levým tlačítkem myši na tlačítko pro scénu.  Jasně zelené tlačítko znamená, že scéna spojená s tímto tlačítkem je v současnosti činnou scénou. Matně zelené tlačítko značí, že scéna je nahrána, ale není v činnosti. Červené tlačítko znamená, že tato scéna nemá nahrána žádná nastavení. Jasně žluté tlačítko znamená, že tato scéna je v činnosti, ale nastavení byla změněna.  Pokud chcete nastavení uložit, musíte použít položku "Nastavit" v tlačítkové nabídce po klepnutí pravým tlačítkem myši.  Nastavení můžete z tlačítka vymazat pomocí nabídky vyvolané klepnutím pravým tlačítkem myši a v ní položkou "Vymazat".
+
+    Klávesnicové urychlovače pro tlačítka se scénami jsou klávesy s čísly, od 1 do 0 pro scény od 1 do 10.  Od <Shift>-1 do <Shift>-0 přistoupí ke scénám od 11 do 20.  Například stisknutí klávesy 1 způsobí, že se scéna 1 stane činnou.  Stisknutí <Shift>-5 způsobí, že se scéna 15 stane činnou.  Modifikátor Alt je možné použít k přiřazení nastavení pro tlačítko se scénou (místo použití nabídky pro tlačítko se scénou).  Stisknutí <Alt><Shift>-5 přiřadí současná nastavení ke tlačítku se scénou 15 (ještě můžete chtít změnu názvu). Modifikátor Ctrl je možné použít k vymazání tlačítka se scénou.  Stisknutí <Ctrl>-4 vymaže tlačítko se scénou 4.  
+
+    Všimněte si, že kláves klávesnice je možné použít jen pro scény od 1 do 10 při zapnutém zámku číslicové klávesnice (funkce Num Lock).  Použití klávesnice, když je funkce Num Lock vypnuta, povede k přistoupení ke klávesám s ukazovacími šipkami (které se dají používat k ovládání některých stránek rozhraní).  Použití <Shift> s klávesnicí při zapnutém zámku klávesnice (funkce Num Lock) taktéž povede k přistoupení ke klávesám s ukazovacími šipkami.
+ru%s internal error %d: %s
+%s внутренняя ошибка %d: %s
+czKKolenocz317317ru(C) 2003-2005 J. Depner, S. Harris, J. O'Quin, R. Parker and P. Shirkey
+(C) 2003-2005 J. Depner, S. Harris, J. O'Quin, R. Parker и P. Shirkey
+ruMeter NormalОбычный уровеньruSetУстановитьfrHDEQ BackgroundArrière plan égaliseur HDruiomenu error: %s
+ошибка iomenu: %s
+ru    The spectrum display shows the power spectrum of the signal in bands that correspond to the frequency bands in the 30 band EQ (GEQ). In addition it displays the maximum value reached for each band as a (by default) blue line.
+График частотного спектра отображает мощность сигнала в каждой полосе, сответствующей частотной полосе 30-полосном графическом эквалайзере (GEQ). Помимо того, при помощи синей полоски отображается максимальный достигнутый пик в каждой частотной полосе.
+frInput/Output meters (dBFS):VU-mètres Entrée/Sortie (dBFS):cz251251frIIR is less CPU intensive but is not recommended for serious workIIR (Réponse Impulsionnelle Infinie) est moins consommateur de ressources CPU mais n'est pas recommandé pour le travail exigeantruStartingЗапускаетсяfrAbout PrerequisitesÀ propos des dépendancesfrLowGravesruunable to connect to %s
+не удаётся соединить с %s
+czright %.0fdBVpravo %.0fdBcz12k12 kHzcz12 KHz12000 Hzfr<b>Low : %d - %d</b><b>Graves : %d - %d</b>ruInput GainВходное усилениеfr    JAMin is the JACK Audio Mastering interface.
+
+    Web site: <http://jamin.sourceforge.net>
+
+    JAMin is designed to perform professional audio mastering of any number of input streams.  It consists of a number of tools to do this: a 1024 band hand drawn EQ with modifiable parametric controls, a 31 band graphic EQ, 3 band compressor, 3 band stereo width control, lookahead limiter, boost, and a number of other features.
+
+    Steve Harris is the JAMin principle author and team leader.
+
+    SourceForge CVS developers, in alphabetical order:
+
+    Jan Depner
+    Steve Harris
+    Jack O'Quin
+    Ron Parker
+    Patrick Shirkey
+
+    JAMin is released under the GNU General Public License and is copyright (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, and P. Shirkey. 
+    This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    JAMin est l'interface de Mastering Audio de JACK.
+
+    Site Web: <http://jamin.sourceforge.net>
+
+    JAMin est conçu pour réaliser un mastering audio professionnel de n'importe quel nombre de canaux d'entrée.Pour ce faire, il est composé d'un certain nombre d'outils: un égaliseur 1024 bandes dessinable à la main avec contrôles paramétriques modifiables; un égaliseur graphique 31 bandes, un compresseur 3 bandes, un contrôleur de stéréophonie 3 bandes, un limiteur "lookahead", un "boost" et un certain nombre d'autres fonctionnalités.
+
+    Steve Harris est l'auteur principal et le chef d'équipe de JAMin.
+
+    Développeurs CVS SourceForge, par ordre alphabétique:
+
+    Jan Depner
+    Steve Harris
+    Jack O'Quin
+    Ron Parker
+    Patrick Shirkey
+
+    JAMin is released under the GNU General Public License and is copyright (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, and P. Shirkey. 
+    This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ruCrossfade time (sec):Время кроссфейда (сек):fr_Crossfade time (sec):Temps fondu en_chaîné (en s):frLow to Mid Band CrossoverFréquence de Coupure Graves/Médiumscz39 Hz39 Hzru[unknown][неизвестно]cz31 Hz31 HzruColorsЦветаruOnlineВ Интернетеru3131ruMid Band SoloСоло среднихru3939frBypass EQ processingDésactive l'égaliseurru%dHz , EQ : %ddb , Spectrum : %ddb%d Гц , EQ : %d Дб, Спектр : %d ДбfrPre EQPré-égalisationczSplined length %d does not match BINS / 2 - 1 (%d)Délka tvárného křivítka %d neodpovídá BINS / 2 - 1 (%d)ruThresholdПорогczANáběhcz    The hand drawn EQ (HDEQ) allows the user to draw the EQ curve using the mouse.  The curve is then splined to fill 1024 EQ bands.  There are a number of other options available in the HDEQ.  There are user defined notches that act as a parametric EQ.  There are also crossover controls that will allow the user to change the compressor crossover points.  The following is a quick guide to using the HDEQ:
+
+    In the background window - left click and release to begin drawing the curve.  Left click again to end the curve.  You can define any portion of the curve, you don't have to define the entire curve.  Drawing can be done from left to right or right to left.  If you try to reverse direction while drawing the data in the reverse direction will be ignored.  You can discard the curve that you are drawing by clicking the middle or right buttons.  Clicking the right mouse button in the HDEQ when not drawing a curve will reset all EQ and notch values to their original (flat) settings.
+
+    Over the crossover bar handles - left click and hold to drag the crossover bars.
+
+    Over the notch handles - left click and hold to drag the notch center or cuttoff frequency and gain.  <Ctrl>-left click will reset the notch to 0.  If you hold the shift key while adjusting the notch handle it will only move in the Y (gain) direction.
+
+    Over the notch width handle - left click and hold to widen or narrow the notches, except the high and low cutoff notches which have no width handles.
+    Ručně kreslený ekvalizér uživateli umožňuje kreslení křivky ekvalizéru pomocí myši.  Křivka je pak zakřivena, aby vyplnila pásma 1024 ekvalizéru.  V ručně kresleném ekvalizéru  je dostupné množství dalších funkcí.  Jsou v něm uživatelem určené stupínky, která si počínají jako parametrický ekvalizér.   Jsou v něm i ovladače přechodu, které uživateli umožní změnu přechodových bodů v kompresoru.  Následuje rychlý průvodce používáním ručně kresleného ekvalizéru:
+
+    V okně pozadí - klepnutí levým tlačítkem myši a uvolnění pro započetí s kreslením křivky.  Opětovné klepnutí levým tlačítkem myši pro ukončení křivky.  Můžete přesně stanovit kterýkoli kus křivky, nemusíte vytyčit celou křivku.  Kreslit je možné zleva doprava nebo zprava doleva. Pokud se během kreslení dat v opačném směru pokusíte obrátit směr, bude toto vaše počínání přehlíženo.  Křivku, kterou kreslíte, můžete vyhodit, klepnete-liprostředním nebo pravým tlačítkem myši.  Klepnutí levým tlačítkem myši v ručně kresleném ekvalizéru, když křivku nekreslíte, nastaví celý ekvalizér a hodnoty stupínků znovu na jejich původní (rovné) nastavení.
+
+    Nad úchopy přechodových pruhů - klepnutí levým tlačítkem myši a držení pro táhnutí přechodových pruhů.
+
+    Nad úchopy stupínků - klepnutí levým tlačítkem myši a držení pro táhnutí středu stupínku nebo uzavírajícího kmitočtu a zesílení.  <Ctrl>-klepnutí levým tlačítkem myši nastaví stupínek znovu na 0.  Pokud podržíte klávesu Shift, když upravujete úchop stupínku, přesune se pouze ve směru Y (zesílení).
+
+    Nad úchopem šířky stupínku - klepnutí levým tlačítkem myši a držení pro rozšíření anebo zúžení stupínků, kromě vysokých a nízkých uzavírajících stupínků, jež pro šířku nemají žádného úchopu.
+fr_General_GénéraleruPost EQ spectrum        Спектр после эквализацииfrrrru317317ruKKfrGanged ControlsContrôleurs liésczMeter NormalMěření v normáluczSetNastavitfrLevelNiveaufrJAMinJAMinczunable to connect %s to %s
+Nelze spojit %s s %s
+ru251251czStartingSpouští sefrpause transportpausecziomenu error: %s
+Chyba v nabídce vstupu/výstupu: %s
+frMid Band Stereo WidthLargeur Stéréo Bande Médiumsfrleft %.0fdBgauche %.0fdBfrDisplay HDEQ help pageAfficher aide égaliseur HDfrNo physical playback ports foundAucune port physique de playback trouvéruright %.0fdBсправа %.0fДбruunable to connect %s to %s
+не удаётся соединить %s с %s
+cz%s: jack_client_open() failed, status = 0x%2.0x
+%s: jack_client_open() selhal, stav = 0x%2.0x
+ruFile %s : %s
+Using default.Файл %s : %s
+Используется стандартный.ru12 KHz12 кГцru12k12кfrLimitSeuilfr<i><b>Colors</b></i><i><b>Couleurs</b></i>czInput GainVstupní zesíleníruStopped | some CPU | some frames | 96000 Hz | Focus - somethingОстановлено·|·сколько-то·CPU·|·сколько-то выборок·|·96000·Гц·|·Что-то в фокусеru39 Hz39 Гцru31 Hz31 ГцfrRollingDéfilecz[unknown][Neznámý]fr  |  RT  |  TRczCrossfade time (sec):Čas prolínání (s):fr_Edit_Editionfr_Maximum gain (db):Gain _maximal (en dB):ruAAczThresholdPráhcz
+JAMin is released under the GNU General Public License and is copyright (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, and P. Shirkey. 
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. 
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+JAMin je vydán GNU General Public License a je chráněn autorským právem (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, a P. Shirkey. 
+
+
+Tento program je svobodným softwarem; můžete jej rozdávat a/nebo upravovat za podmínek GNU General Public License (GPL), jak jsou zveřejněny Free Software Foundation; buď ve verzi 2 licence, nebo (podle své volby) v kterékoli pozdější verzi.
+
+Tento program je šířen v naději, že bude užitečný, ale BEZ JAKÉKOLI ZÁRUKY; také bez předpokládané záruky PRODEJNOSTI nebo POUŽITELNOSTI PRO NĚJAKÝ URČITÝ ÚČEL: Více podrobností naleznete v GNU Library General Public License.
+
+Kopii GNU Library General Public License byste měl obdržet společně s tímto programem; a pokud ne, napište Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.czMid Band SoloSólo středního pásmacz3131czOnlineInternetczColorsBarvyruSet the maximum gain level for the EQУстановить максимальный уровень усиления в эквалайзереcz3939frunable to disconnect %s from %s
+déconnexion de %s à %s impossible
+cz    Colors may be changed in the Options->Preferences dialog.  These colors are saved in the file $HOME/.jamin-defaults.  This is done whenever you exit from JAMin.  You can actually edit this file and change the colors by hand.  They are just RGB values in the 0-65535 range but it's much easier to use the GUI ;-).  You may also set the crossfade time and crossover type in this dialog (see the man page for more information on crossfade time and crossover type).
+    Barvy se dají změnit v dialogu Volby->Nastavení.  Tyto barvy jsou uloženy v souboru $HOME/.jamin-defaults.  Dělá se to vždycky při ukončení JAMinu.  Tento soubor můžete upravovat a barvy měnit ručně.  Jsou to prostě hodnoty RGB v rozsahu 0-65535, ale je daleko snadnější použít k tomu rozhraní ;-).  V tomto okně také můžete nastavit čas prolínání a typ přechodu (více informací k času prolínání a typu přechodu hledejte na stránkách s návodem).
+ruClose the Preferences windowЗакрыть диалог настройкиcz1000 Hz1000 Hzcz5000 Hz5000 Hzru    The adjustable crossover is used to split the entire audible range into three sections.  It applies to the compressors and stereo widths. If the crossovers are set to 500Hz and 5KHz then the first stereo width control and compressor works for 25-500Hz, the second for 500Hz-5KHz, and the last for 5KHz-20KHz.  The crossover has no effect on the HDEQ unless one or more bands are soloed.  The crossover bars that are visible in the HDEQ serve as a visual reference.
+     Настраиваемый кроссовер используется для разделения всего слышимого звукового диапазона частот на три части.  Он работает с компрессорами и регуляторами ширины стеребазы.  Если кроссоверы установлены на 500 Гц и 5 кГц, то первый регуляторы ширины стереобазы будет работать для полосы 25-500 Гц, второй -- для 500 Гц-5 кГц и третий -- для 5-20 кГц.   Кроссовер никак не влияет на рисуемый эквалайзер (HDEQ).   В любом случае, полосы кроссовера, видимые в HDEQ, служат лишь для визуального контроля.
+cz0000000000ru503 Hz503 ГцruPost compressor spectrumСпектр после компрессораcz4000 Hz4000 HzczBar A biasZkreslení pruhu AruRight click for menuМеню под правой кнопкой мышиru%s: JACK server started
+%s: сервер JACK запущен
+ru125125frMidMédiumsczforward transportVpředczUpdate frequency (Hz):Obnovovací kmitočet (Hz):czChange the crossfade time for scene changesZměnit čas prolínání pro změny scényfrSelect a session fileSélectionner un fichier de sessioncz--------ruReset All ColorsСбросить все цветаru    This button will bypass all of JAMin's functions.  The keyboard accelerator for this button is the 'b' key.
+    Этой кнопкой включается обход всех изменений, сделанных  при помощи JAMin.  "Горячей клавишей" является 'b'.
+cz100 Hz100 Hzcz158158cz2525frMi_nimum gain (db):Gain mi_nimal (en dB):frStoppedArrêtéczHigh Band SoloSólo vysokého pásmaru25 Hz25 Гцru3200 Hz3200 Гцru634 Hz634 гцczCouldn't find pixmap file: %sNelze najít soubor s pixmapou: %sru200200czHigh : 00000 - 00000Vysoký kmitočet: 00000 - 00000frSet the minimum gain level for the EQsRègle le niveau de gain minimal des égaliseursruIIRIIRfrSoloSoloru%s: Cannot register JACK ports.%s: Не удаётся зарегистрировать JACK-порты.ruOutput spectrum         Спектр на выходеruLow Band SoloСоло низкихru    The output control allows you to decrease the output level.  The upper level is 0dB.  Clicking the right mouse button on the output control will reset the value to 0.0.  Clicking the right mouse button on the meter will reset the peak indicator to the current level.
+    Регулятор выхода позволяет уменьшить уровень выхода.  Самым верхним уровнем является 0 Дб.  Щелчком правой кнопки мыши по регулятору выхода значение сбрасывается в 0.0. Щелчком правой кнопки мыши по индикатору обнуляется его пик.
+ruInВходczBypassObejítruSet scene nameУказать имя сценыruHigh : %d - %dВысокие: %d - %dcz400 Hz400 HzfrHDEQ GridGrille égaliseur HDfrrewind transportrembobinerfrJAMin session fileFichier de session JAMinru800800frHDEQ CurveCourbe égaliseur HDrujam error: Adjustment from out-of-range band %d requested
+Ошибка JAMin: Запрошена подстройка полосы %d вне зоны действия
+fr0.00.0czconnecting port %s to %s
+Spojuje se přípojka %s s %s
+frPreferencesPréférencesfr<i><b>Graphic EQ</b></i><i><b>Egaliseur graphique</b></i>ru0000000000cz503 Hz503 HzfrInput BalancePanoramique d'entréefrChange the spectrum update frequencyChange la fréquence de mise à jour du spectreru Terminating due to -F option.
+ Завершение ввиду параметра -F.
+ru%s: unique name `%s' assigned
+%s: назначено уникальное имя `%s'
+ru5000 Hz5000 ГцczLow to Mid Band CrossoverPřechod z nízkého do středního pásmaru1000 Hz1000 Гцcz125125czRight click for menuPravé klepnutí pro vyvolání nabídkyruforward transportперемотать вперёдfrInputEntréefr<b>Mid : 00000 - 00000</b><b>Médiums : 00000 - 00000</b>ru4000 Hz4000 Гцcz    JAMin is the JACK Audio Mastering interface.
+
+    Web site: <http://jamin.sourceforge.net>
+
+    JAMin is designed to perform professional audio mastering of any number of input streams.  It consists of a number of tools to do this: a 1024 band hand drawn EQ with modifiable parametric controls, a 31 band graphic EQ, 3 band compressor, 3 band stereo width control, lookahead limiter, boost, and a number of other features.
+
+    Steve Harris is the JAMin principle author and team leader.
+
+    SourceForge CVS developers, in alphabetical order:
+
+    Jan Depner
+    Steve Harris
+    Jack O'Quin
+    Ron Parker
+    Patrick Shirkey
+
+    JAMin is released under the GNU General Public License and is copyright (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, and P. Shirkey. 
+    This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    JAMin je zkratka pro JACK Audio Mastering interface.
+
+    Stránky: <http://jamin.sourceforge.net>
+
+    JAMin je navržen pro to, aby dělal profesionální hlavní nahrávku zvuku, ze které se dají pořizovat kopie, z jakéhokoli počtu vstupních proudů.  Skládá se, aby to dělal, z určitých nástrojů: 1024 pásmový ručně kreslený ekvalizér s upravitelným parametrickým ovládáním, a jednatřiceti pásmový obrazový ekvalizér, třípásmový kompresor, třípásmové ovládání šířky sterea, omezovač dívající se dopředu. Jde tu o chybné pojmenování, protože budoucnost ve skutečnosti pozorována není. Místo toho je signál rozdělen a jedna jeho strana je zpožděna. Nezpožděný signál je použit k řízení stlačení zpožděného signálu, který se potom objeví na výstupu. Tímto způsobem se jemně znějící pomalejší náběh používá pro zachycení přechodů, které je schopen zachytit rychlý náběh. Cenou za to je právě to, že signál je zpožděn. Dále tu je zesilovač a množství jiných vlastností.
+
+    Steve Harris je hlavním autorem JAMinu a vedoucím družstva.
+
+    Vývojáři CVS SourceForge, v abecedním pořadí:
+
+    Jan Depner
+    Steve Harris
+    Jack O'Quin
+    Ron Parker
+    Patrick Shirkey
+
+    JAMin je vydán GNU General Public License a je chráněn autorským právem (c) 2003 J. Depner, S. Harris, J. O'Quin, R. Parker, a P. Shirkey. 
+    Tento program je svobodným softwarem; můžete jej rozdávat a/nebo upravovat za podmínek GNU General Public License (GPL), jak jsou zveřejněny Free Software Foundation; buď ve verzi 2 licence, nebo (podle své volby) v kterékoli pozdější verzi.
+    Tento program je šířen v naději, že bude užitečný, ale BEZ JAKÉKOLI ZÁRUKY; také bez předpokládané záruky PRODEJNOSTI nebo POUŽITELNOSTI PRO NĚJAKÝ URČITÝ ÚČEL: Více podrobností naleznete v GNU Library General Public License.
+    Kopii GNU Library General Public License byste měl obdržet společně s tímto programem; a pokud ne, napište Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+frLow Band Stereo WidthLargeur Stéréo Bande GravesczNo physical playback ports foundNebyly nalezeny žádné fyzické přípojky pro přehrávánífrHelpAideczStopped | some CPU | some frames | 96000 Hz | Focus - somethingZastaveno | některý CPU | některé snímky | 96000 Hz | Zaostření - něcoru158158ru100 Hz100 ГцczReset All ColorsNastavit všechny barvy znovuru--------ruX=input db , Y=output dbX=Дб на входе , Y=Дб на выходеru2525cz634 Hz634 Hzcz3200 Hz3200 Hzcz25 Hz25 Hzfr_Update frequency (Hz):Fréquence de mise à jo_Ur (Hz):ruHigh : 00000 - 00000Высокие : 00000 - 00000cz200200ruHigh Band SoloСоло высокихczLow Band SoloSólo nízkého pásmaruCannot connect input port "%s"
+Не удаётся подсоединить порт входа "%s"
+frMakeup gainRattrapage de GainczIIRIIRfrOutputSortiefrReset the HDEQ curve to zeroMettre la courbe égaliseur HD à zérocz800800frReleaseRelâcheru    This button allows you to bypass limiting.  It has no effect on any of the other controls.
+    Этой кнопкой включается обход ограничителя (лимитера). На остальные регуляторы это никак не влияет.
+czPre EQ spectrum         Spektrum před ekvalizéremfr_Ports_PortsczInVstupru400 Hz400 ГцczHigh : %d - %dVysoký kmitočet: %d - %dczSet scene nameNastavit název scényfrHigh Band Stereo WidthLargeur Stéréo Bande AigüesruHigh Band Stereo WidthСтереобаза высокихruBypassОбход
