@@ -91,6 +91,9 @@
 #include "help.h"
 #include "support.h"
 
+/* Forward declaration of the Haiku bridge */
+void* haiku_jack_init(const char* name);
+
 char *jamin_options = "dFf:j:n:hprTtvVl:s:c:igD";   /* valid JAMin options */
 char *pname;				      /* `basename $0` */
 int dummy_mode = 0;			      /* -d option */
@@ -100,6 +103,7 @@ int connect_ports = 1;			      /* -p option */
 int trace_option = 0;			      /* -T option */
 int thread_option = 1;			      /* -t option */
 int debug_level = DBG_OFF;		      /* -v option */
+//int debug_level = DBG_VERBOSE;
 char session_file[PATH_MAX];		      /* -f option */
 int gui_mode = 0;			      /* -g/-D option : Classic, Presets, Daemon*/
 int limiter_plugin_type;                      /* -l option - 0=Steve's fast, 1=Sampo's foo */
@@ -119,19 +123,21 @@ static char *errstr;
 
 #define DSP_STATE_IS(x)		((dsp_state)&(x))
 #define DSP_STATE_NOT(x)	((dsp_state)&(~(x)))
-static volatile int dsp_state = DSP_INIT;
+volatile int dsp_state = DSP_INIT; 
 
-static int have_dsp_thread = 0;		/* DSP thread exists? */
-static size_t dsp_block_bytes;		/* DSP chunk size in bytes */
+
+int have_dsp_thread = 0;		/* DSP thread exists? */
+size_t dsp_block_size = 1024;
+size_t dsp_block_bytes;		/* DSP chunk size in bytes */
 
 #define DSP_PRIORITY_DIFF 1	/* DSP thread priority difference */
-static pthread_t dsp_thread;	/* DSP thread handle */
-static pthread_cond_t run_dsp = PTHREAD_COND_INITIALIZER;
-static pthread_mutex_t lock_dsp = PTHREAD_MUTEX_INITIALIZER;
+pthread_t dsp_thread;	/* DSP thread handle */
+pthread_cond_t run_dsp = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t lock_dsp = PTHREAD_MUTEX_INITIALIZER;
 
 #define NCHUNKS 4		/* number of DSP blocks in ringbuffer */
-static jack_ringbuffer_t *in_rb[NCHANNELS];  /* input channel buffers */
-static jack_ringbuffer_t *out_rb[BCHANNELS]; /* output channel buffers */
+jack_ringbuffer_t *in_rb[NCHANNELS];  /* input channel buffers */
+jack_ringbuffer_t *out_rb[BCHANNELS]; /* output channel buffers */
 
 /* JACK connection data */
 io_jack_status_t jst = {0};		/* current JACK status */
@@ -151,15 +157,6 @@ static const char *iports[NCHANNELS] = {NULL, NULL};
 static const char *oports[BCHANNELS] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 
-/****************  Low-level utility functions  ****************/
-
-
-/* io_trace -- trace I/O activity.
- *
- *  This function can be called from any thread, realtime or normal.
- *  Since it never waits, we avoid the possible priority inversion of
- *  a realtime thread waiting on a non-realtime one.
- */
 pthread_mutex_t io_trace_lock = PTHREAD_MUTEX_INITIALIZER;
 #define TR_BUFSIZE	256		/* must be power of 2 */
 #define TR_MSGSIZE	60
@@ -194,10 +191,7 @@ void io_trace(const char *fmt, ...)
     }
 }
 
-/* io_list_trace -- list trace buffer contents
- *
- *  This must be called in a context where waiting is allowed.
- */
+
 void io_list_trace()
 {
     size_t t;
@@ -216,12 +210,7 @@ void io_list_trace()
 }
 
 
-/* io_errlog -- log I/O error.
- *
- *  This is only a stub.  The DSP engine has no business calling
- *  stdio.  Error information needs to be queued for the UI to handle
- *  running in some other thread.
- */
+
 void io_errlog(int err, char *fmt, ...)
 {
     va_list ap;
@@ -241,10 +230,6 @@ void io_errlog(int err, char *fmt, ...)
 }
 
 
-/* io_new_state -- DSP engine state transition.
- *
- *  May be called from *any* thread context.  Must not wait.
- */
 void io_new_state(int next)
 {
     /* These transitions don't happen all that often, and they are
@@ -321,14 +306,8 @@ void io_set_latency(int source, jack_nframes_t delay)
 }
 
 
-/****************  DSP thread functions  ****************/
 
-
-/* io_get_dsp_buffers -- get buffer addresses for DSP thread.
- *
- *  Returns: 1 if sufficient space available, 0 otherwise.
- */
-int io_get_dsp_buffers(int nchannels, int bchannels,
+int ooooooooooooooooooooooooooio_get_dsp_buffers(int nchannels, int bchannels,
 		       jack_default_audio_sample_t *in[NCHANNELS],
 		       jack_default_audio_sample_t *out[BCHANNELS])
 {
@@ -361,104 +340,139 @@ int io_get_dsp_buffers(int nchannels, int bchannels,
     return 1;				/* success */
 }
 
+int io_get_dsp_buffers(int nchannels, int bchannels,
+                       jack_default_audio_sample_t *in[NCHANNELS],
+                       jack_default_audio_sample_t *out[BCHANNELS])
+{
+    int chan;
+    jack_ringbuffer_data_t io_vec[2];
 
-/* io_dsp_thread -- DSP thread main loop.
- *
- *  Main program of a realtime thread separate from and with a lower
- *  priority than the JACK process() thread.  When the JACK period is
- *  small, the process() thread queues multiple blocks, so the DSP can
- *  accumulate enough input to run efficiently.
- *
- *  DSP engine state transitions:
- *	DSP_ACTIVATING -> DSP_STARTING	when ready for input
- *	DSP_STARTING   -> DSP_RUNNING	when output available
- *
- *  Exits when DSP_STOPPING set.
- */
+    for (chan = 0; chan < bchannels; chan++) {
+        /* 1. Input Check: Wait until there is a full block to read */
+        if (chan < nchannels) {
+            if (jack_ringbuffer_read_space(in_rb[chan]) < dsp_block_bytes)
+                return 0;			
+        }		
+		
+        /* 2. Output Check: Wait until there is space to write the result.
+           Your BufferReceived call to jack_ringbuffer_read will clear this space. */
+
+		if (jack_ringbuffer_write_space(out_rb[chan]) < dsp_block_bytes) {
+    		static int blocked_chan = -1;
+    		if (blocked_chan != chan) {
+        		fprintf(stderr, "[JAMin-DSP] Blocked by Output Channel: %d\n", chan);
+        		blocked_chan = chan;
+   		 }
+    		return 0;
+		}
+
+
+        /* 3. Setup Pointers: Use the non-copying vector API for speed */
+        if (chan < nchannels) {
+            jack_ringbuffer_get_read_vector(in_rb[chan], io_vec);
+            in[chan] = (jack_default_audio_sample_t *) io_vec[0].buf;
+            // Ensure the ringbuffer didn't wrap in the middle of our block
+            assert(io_vec[0].len >= dsp_block_bytes); 
+        }
+			
+        jack_ringbuffer_get_write_vector(out_rb[chan], io_vec);
+        out[chan] = (jack_default_audio_sample_t *) io_vec[0].buf;
+        assert(io_vec[0].len >= dsp_block_bytes); 
+    }
+    return 1;
+}
+
+
+
+
+/* io_dsp_thread -- DSP thread main loop. */
 void *io_dsp_thread(void *arg)
 {
     jack_default_audio_sample_t *in[NCHANNELS], *out[BCHANNELS];
     int chan;
     int rc;
+    static int loop_count = 0;
 
-    IF_DEBUG(DBG_TERSE, io_trace("DSP thread start"));
+    fprintf(stderr, "[JAMin-DSP] Thread started.\n");
 
-    /* The DSP lock is held whenever this thread is actually running. */
     pthread_mutex_lock(&lock_dsp);
 
-    /* This check is because we may already have shut down. */
-    if (DSP_STATE_IS(DSP_ACTIVATING))
-	io_new_state(DSP_STARTING);	/* allow queuing to begin */
+    // Initial state transition
+    if (DSP_STATE_IS(DSP_ACTIVATING | DSP_STARTING | DSP_INIT)) {
+        dsp_state = DSP_RUNNING;
+        fprintf(stderr, "[JAMin-DSP] Force-switched to RUNNING (State: %d)\n", dsp_state);
+    }
 
+    // Use the defined state check for the loop
     while (DSP_STATE_NOT(DSP_STOPPING)) {
+        
+        // --- THE WORKHORSE ---
+        if (io_get_dsp_buffers(nchannels, bchannels, in, out)) {
+            do {
+                rc = process_signal(dsp_block_size, nchannels, bchannels, in, out);
+                
+                if (loop_count++ % 500 == 0) {
+                    fprintf(stderr, "[JAMin-DSP] Processing... State: %d | Loop: %d\n", dsp_state, loop_count);
+                }
 
-	/* process any buffers queued for DSP */
-	while (io_get_dsp_buffers(nchannels, bchannels, in, out)) {
+                if (rc != 0)
+                    io_errlog(EAGAIN, "signal processing error: %d.", rc);
 
-	    rc = process_signal(dsp_block_size, nchannels, bchannels, in, out);
-	    if (rc != 0)
-		io_errlog(EAGAIN, "signal processing error: %d.", rc);
+                for (chan = 0; chan < bchannels; chan++) {
+                    jack_ringbuffer_write_advance(out_rb[chan], dsp_block_bytes);
+                    if (chan < nchannels) {	
+                        jack_ringbuffer_read_advance(in_rb[chan], dsp_block_bytes);
+                    }
+                }
+            } while (io_get_dsp_buffers(nchannels, bchannels, in, out));
+        } else {
+            // DIAGNOSTIC: If we wake up but don't process, let's check why.
+            static int idle_log = 0;
+            if (idle_log++ % 500 == 0) {
+                // If in_rb[0] is valid, check how many bytes are actually in it
+                size_t fill = (in_rb[0]) ? jack_ringbuffer_read_space(in_rb[0]) : 0;
+                fprintf(stderr, "[JAMin-DSP] Idle wakeup. RB Fill: %zu, Need: %zu\n", fill, dsp_block_bytes);
+            }
+        }
 
-	    IF_DEBUG(DBG_NORMAL, io_trace("DSP process_signal() done"));
-
-	    /* Advance the ring buffers.  This frees up the input
-	     * space and queues the output for the JACK process
-	     * thread. */
-	    for (chan = 0; chan < bchannels; chan++) {
-			jack_ringbuffer_write_advance(out_rb[chan], dsp_block_bytes);
-			if ( chan < nchannels ){	
-				jack_ringbuffer_read_advance(in_rb[chan], dsp_block_bytes);
-			}
-	    }
-	    if (DSP_STATE_IS(DSP_STARTING))
-		io_new_state(DSP_RUNNING); /* output available */
-	}
-
-	/* Wait for io_schedule() to wake us up.  Make sure data
-	 * really are available.  Pthreads can give spurious wakeups,
-	 * sometimes. */
-	rc = pthread_cond_wait(&run_dsp, &lock_dsp);
-	if (rc != 0)
-	    io_errlog(EINVAL, "pthread_cond_wait() returns %d.", rc);
-
-	IF_DEBUG(DBG_NORMAL, io_trace("DSP thread wakeup"));
-
+        // Wait for BufferReceived to signal us
+        rc = pthread_cond_wait(&run_dsp, &lock_dsp);
+        
+        if (rc != 0) {
+            fprintf(stderr, "[JAMin-DSP] pthread_cond_wait error: %d\n", rc);
+        }
     };
 
     pthread_mutex_unlock(&lock_dsp);
-
-    IF_DEBUG(DBG_TERSE, io_trace("DSP thread end"));
-
+    fprintf(stderr, "[JAMin-DSP] Thread exiting.\n");
     return NULL;
 }
 
 
-/****************  JACK thread functions  ****************/
 
-
-/* io_schedule -- schedule the DSP thread to run.
- *
- *  The DSP thread holds the DSP lock whenever it is running.  In that
- *  case, we need not do anything more here.  This function is called
- *  from the JACK thread, so it must not wait.
- */
 void io_schedule()
 {
-    if (pthread_mutex_trylock(&lock_dsp) == 0) {
-	IF_DEBUG(DBG_NORMAL, io_trace(" DSP scheduled"));
-	pthread_cond_signal(&run_dsp);
-	pthread_mutex_unlock(&lock_dsp);
+    // On Haiku, we want to ensure the signal is sent.
+    // If the DSP thread is busy, the signal will be caught 
+    // immediately after it hits pthread_cond_wait.
+    pthread_mutex_lock(&lock_dsp);
+    
+    IF_DEBUG(DBG_NORMAL, io_trace(" DSP scheduled"));
+    
+    // Wake up the io_dsp_thread
+    pthread_cond_signal(&run_dsp);
+    
+    pthread_mutex_unlock(&lock_dsp);
+    
+    // Optional: add a tiny debug log to confirm the stub is calling this
+    static int sched_count = 0;
+    if (sched_count++ % 1000 == 0) {
+        fprintf(stderr, "[JAMin-IO] io_schedule: Signal sent to DSP thread.\n");
     }
-    else
-	IF_DEBUG(DBG_NORMAL, io_trace(" DSP already running"));
-
 }
 
 
-/* io_queue -- queue JACK buffers to DSP thread.
- *
- *  Runs as a high-priority realtime thread.  Cannot ever wait.
- */
+
 int io_queue(jack_nframes_t nframes, int nchannels, int bchannels,
 	     jack_default_audio_sample_t *in[NCHANNELS],
 	     jack_default_audio_sample_t *out[BCHANNELS])
@@ -468,66 +482,70 @@ int io_queue(jack_nframes_t nframes, int nchannels, int bchannels,
     size_t nbytes = nframes * sizeof(jack_default_audio_sample_t);
     size_t count;
 
-    if (DSP_STATE_IS(DSP_ACTIVATING))	/* DSP thread not ready? */
-	return EBUSY;
+    // Use decimal 8 (DSP_RUNNING) or octal 010
+    if (DSP_STATE_IS(DSP_ACTIVATING)) {
+        return EBUSY;
+    }
 
-    IF_DEBUG(DBG_VERBOSE, io_trace(" DSP input queued"));
-
-    /* queue JACK input buffers for DSP thread */
+    /* 1. Queue Input Data */
     for (chan = 0; chan < nchannels; chan++) {
-		count = jack_ringbuffer_write(in_rb[chan], (void *) in[chan], nbytes);
-		if (count != nbytes) {		/* buffer overflow? */
-
-			/* This is a realtime bug.  We have input audio with no
-			 * place to go.  The DSP thread is not keeping up, and
-			 * there's nothing we can do about it here. */
-			IF_DEBUG(DBG_TERSE,
-				 ((chan == 0)?
-				  io_trace("input overflow, %ld bytes written.", count):
-				  NULL));
-			abort();			/* take a dump */
-			rc = ENOSPC;		/* out of space */
-		}
+        if (!in_rb[chan]) continue; // Safety for Haiku port
+        
+        count = jack_ringbuffer_write(in_rb[chan], (const char *) in[chan], nbytes);
+        
+        if (count != nbytes) {
+            // Under Haiku, we prefer to log and drop rather than abort()
+            static int overflow_count = 0;
+            if (overflow_count++ % 100 == 0) {
+                fprintf(stderr, "[JAMin-IO] Input Overflow! Channel %d\n", chan);
+            }
+            rc = ENOSPC;
+        }
     } 
 
-    /* if there is enough input, schedule the DSP thread */
-    if (jack_ringbuffer_read_space(in_rb[0]) >= dsp_block_bytes)
-	io_schedule();
+    /* 2. Check if we should wake the DSP thread */
+    // Only signal if we have a full block ready to crunch
+    if (in_rb[0] && jack_ringbuffer_read_space(in_rb[0]) >= dsp_block_bytes) {
+        io_schedule(); // This calls pthread_cond_signal(&run_dsp)
+    } else {
+        // DEBUG PROBE: If you aren't seeing processing, this will tell you why
+        static int debug_tick = 0;
+        if (debug_tick++ % 1000 == 0) {
+            size_t space = in_rb[0] ? jack_ringbuffer_read_space(in_rb[0]) : 0;
+            fprintf(stderr, "[JAMin-IO] Not enough data to schedule: %zu/%zu bytes\n", 
+                    space, dsp_block_bytes);
+        }
+    }
 
-    /* dequeue the next buffer that has been completed */
+    /* 3. Dequeue Processed Output Data */
     for (chan = 0; chan < bchannels; chan++) {
-	count = jack_ringbuffer_read(out_rb[chan], (void *) out[chan], nbytes);
-	if (count != nbytes) {		/* not enough output? */
+        if (!out_rb[chan]) {
+            memset(out[chan], 0, nbytes);
+            continue;
+        }
 
-	    /* this is only legit if we're just starting up */
-	    if (DSP_STATE_NOT(DSP_STARTING|DSP_STOPPING)) {
+        count = jack_ringbuffer_read(out_rb[chan], (char *) out[chan], nbytes);
+        
+        if (count < nbytes) {
+            /* If the DSP thread hasn't finished a block yet, we fill with silence */
+            void *addr = ((char *) out[chan]) + count;
+            memset(addr, 0, nbytes - count);
 
-		/* This is a realtime bug.  We do not have output
-		 * audio when we need it.  The DSP thread is not
-		 * keeping up. */
-		IF_DEBUG(DBG_TERSE,
-			 ((chan == 0)?
-			  io_trace("output underflow, %ld bytes read.", count):
-			  NULL));
-		rc = EPIPE;		/* broken pipe */
-	    }
-
-	    /* fill rest of JACK buffer with zeroes */
-	    if (count < nbytes) {
-		void *addr = ((void *) out[chan]) + count;
-		memset(addr, 0, nbytes-count);
-	    }
-	}
+            // Only report underflow if we are supposed to be running
+            if (DSP_STATE_IS(DSP_RUNNING)) {
+                static int underflow_count = 0;
+                if (underflow_count++ % 1000 == 0) {
+                    fprintf(stderr, "[JAMin-IO] Output Underflow (DSP too slow or not started)\n");
+                }
+                rc = EPIPE;
+            }
+        }
     }
 
     return rc;
 }
 
 
-/* io_process -- JACK process callback.
- *
- *  Runs as a high-priority realtime thread.  Cannot ever wait.
- */
 int io_process(jack_nframes_t nframes, void *arg)
 {
     jack_default_audio_sample_t *in[NCHANNELS], *out[BCHANNELS];
@@ -535,177 +553,154 @@ int io_process(jack_nframes_t nframes, void *arg)
     int return_code = 0;
     int rc;
 
-    IF_DEBUG(DBG_VERBOSE, io_trace("JACK process() start"));
-
-    /* get input and output buffer addresses from JACK */
+    // 1. Get the buffer pointers from your stubs
+    // In your jack_stubs.cpp, jack_port_get_buffer must return valid memory
     for (chan = 0; chan < bchannels; chan++) {
-		if ( chan < nchannels){
-			in[chan] = jack_port_get_buffer(input_ports[chan], nframes);
-			
-		} 
-		out[chan] = jack_port_get_buffer(output_ports[chan], nframes);
+        if (chan < nchannels) {
+            in[chan] = (jack_default_audio_sample_t *)jack_port_get_buffer(input_ports[chan], nframes);
+        } 
+        out[chan] = (jack_default_audio_sample_t *)jack_port_get_buffer(output_ports[chan], nframes);
     }
 
-    if (nframes < dsp_block_size) {
-
-	/* This JACK buffer is smaller than desired DSP granularity.
-	 * That increase FFT overhead, just when we most want low
-	 * latency.  Normally, we schedule a separate thread to handle
-	 * this case, queuing buffers to it until dsp_block_size
-	 * frames are available.  If there's some reason not to do
-	 * that, then process it here in smaller chunks.
-	 */
-
-	g_print("bchannels = %i\n", bchannels); 
-	if (have_dsp_thread)
-	    return_code = io_queue(nframes, nchannels, bchannels, in, out);
-	else
-	    return_code = process_signal(nframes, nchannels, bchannels, in, out);
-
-    } else {
-
-	/* With larger JACK buffers, call DSP directly. */ 
-	while (nframes >= dsp_block_size)  {
-
-	    if ((rc = process_signal(dsp_block_size, nchannels, bchannels, in, out)) != 0)
-		return_code = rc;
-
-	    IF_DEBUG(DBG_VERBOSE, io_trace(" DSP block done"));
-
-	    for (chan = 0; chan < bchannels; chan++) {
-			if ( chan < nchannels){
-				in[chan] += dsp_block_size;
-			}
-			out[chan] += dsp_block_size;
-	    }
+    // 2. Decide: Process immediately or Queue it?
+    // On Haiku, we almost ALWAYS want to use the DSP thread (io_queue) 
+    // to keep the Media Server thread responsive.
     
-	    nframes -= dsp_block_size;
-	}
+    if (have_dsp_thread) {
+        // This puts data into ringbuffers and signals io_dsp_thread
+        return_code = io_queue(nframes, nchannels, bchannels, in, out);
+    } else {
+        // Fallback: synchronous processing (only if thread failed to start)
+        if (nframes >= dsp_block_size) {
+            while (nframes >= dsp_block_size) {
+                rc = process_signal(dsp_block_size, nchannels, bchannels, in, out);
+                if (rc != 0) return_code = rc;
+
+                for (chan = 0; chan < bchannels; chan++) {
+                    if (chan < nchannels) in[chan] += dsp_block_size;
+                    out[chan] += dsp_block_size;
+                }
+                nframes -= dsp_block_size;
+            }
+        } else {
+            // Very small buffer fallback
+            return_code = process_signal(nframes, nchannels, bchannels, in, out);
+        }
     }
 
-    IF_DEBUG(DBG_VERBOSE, io_trace("JACK process() end"));
-
-    return 0;
+    return return_code;
 }
 
 
-/* io_xrun -- JACK xrun callback.
- *
- *  Called in the JACK process thread.
- */
 int io_xrun(void *arg)
 {
-    ++jst.xruns;			/* only modified in this thread */
+    // This is called when audio "glitches" (buffer late). 
+    // On Haiku, you can trigger this if your Media Node's 
+    // LateNoticeReceived is called.
+    ++jst.xruns;			
+    
+    static int xrun_count = 0;
+    if (xrun_count++ % 10 == 0) {
+        fprintf(stderr, "[JAMin-IO] XRUN detected! Total: %d\n", jst.xruns);
+    }
+    
     IF_DEBUG(DBG_TERSE, io_trace("I/O xrun"));
     return 0;
 }
 
-
-/* io_bufsize -- JACK buffer size callback.
- *
- *  Called in the JACK process thread when the global JACK buffer size
- *  changes.  Not required to be realtime safe.
- */
 int io_bufsize(jack_nframes_t nframes, void *arg)
 {
+    // Important: JAMin uses this to calculate latency.
+    // In your stub, call this when the Media Kit confirms a buffer size.
     jst.buf_size = nframes;
-    IF_DEBUG(DBG_TERSE, io_trace("buffer size is %" PRIu32, nframes));
+    
+    fprintf(stderr, "[JAMin-IO] Buffer size changed to %u frames\n", nframes);
+    
+    // This math ensures the UI displays the correct latency.
     io_set_latency(LAT_BUFFERS,
 		   (have_dsp_thread &&
 		    (dsp_block_size > nframes)? dsp_block_size: 0));
     return 0;
 }
 
-
-/* io_free_heap -- free heap entry, if allocated. */
+// No changes needed here, standard cleanup utility.
 static inline void io_free_heap(char **p)
 {
-    if (*p) {				/* space allocated? */
+    if (*p) {				
 	free(*p);
-	*p = NULL;			/* mark space freed */
+	*p = NULL;			
     }
 }
 
 
-/* io_cleanup -- clean up all DSP I/O resources.
- *
- *  Called in main user interface thread after user requests "quit",
- *  or in JACK thread if shutdown callback invoked.  JACK allows the
- *  shutdown handler to wait, even though it runs in the process()
- *  thread.  May be called more than once.
- *
- *  DSP engine state transitions:
- *      DSP_INIT	-> DSP_STOPPED
- *	DSP_ACTIVATING	-> DSP_STOPPING -> DSP_STOPPED
- *	DSP_STARTING	-> DSP_STOPPING -> DSP_STOPPED
- *	DSP_RUNNING	-> DSP_STOPPING -> DSP_STOPPED
- *	DSP_STOPPING	-> DSP_STOPPED
- *	DSP_STOPPED	<unchanged>	do nothing, if stopped already
- */
 void io_cleanup()
 {
     int chan;
-
-    IF_DEBUG(DBG_TERSE, io_trace("shutting down I/O and DSP"));
+    fprintf(stderr, "[JAMin-Stubs] io_cleanup called. Shutting down...\n");
 
     switch (dsp_state) {
+        case DSP_INIT:
+            dsp_state = DSP_STOPPED;
+            break;
 
-    case DSP_INIT:			/* should not happen */
-	io_new_state(DSP_STOPPED);
-	break;
-
-    case DSP_ACTIVATING:
-    case DSP_STARTING:
-    case DSP_RUNNING:
-	if (have_dsp_thread) {
-	    pthread_mutex_lock(&lock_dsp);
-	    io_new_state(DSP_STOPPING);	/* stop the DSP thread */
-	    pthread_cond_signal(&run_dsp);
-	    pthread_mutex_unlock(&lock_dsp);
-	    pthread_join(dsp_thread, NULL);
-	}
-	else
-	    io_new_state(DSP_STOPPING);
-	break;
+        case DSP_ACTIVATING:
+        case DSP_STARTING:
+        case DSP_RUNNING:
+            if (have_dsp_thread) {
+                pthread_mutex_lock(&lock_dsp);
+                dsp_state = DSP_STOPPING; // Stop the DSP thread
+                pthread_cond_signal(&run_dsp);
+                pthread_mutex_unlock(&lock_dsp);
+                
+                fprintf(stderr, "[JAMin-Stubs] Waiting for DSP thread to join...\n");
+                pthread_join(dsp_thread, NULL);
+            } else {
+                dsp_state = DSP_STOPPING;
+            }
+            break;
     };	
 
-    if (DSP_STATE_IS(DSP_STOPPING)) {
+    if (dsp_state == DSP_STOPPING) {
+        // 1. Stub Safety: Don't call real JACK functions on your fake client
+        // jack_client_close(client); // REMOVE OR STUB THIS
+        client = NULL;
+        jst.active = 0;
+        dsp_state = DSP_STOPPED;
 
-	/* MUST stop using JACK services before jack_client_close() */
-	jack_client_t *client_save = client;
-	client = NULL;
-	jst.active = 0;
-	io_new_state(DSP_STOPPED);
-	jack_client_close(client_save);	/* leave the jack graph */
-	io_free_heap(&client_name);
-	io_free_heap(&server_name);
+        io_free_heap(&client_name);
+        io_free_heap(&server_name);
 
-	/* free the ring buffers */
-	for (chan = 0; chan < bchannels; chan++) {
-		if (chan < nchannels ){
-			if (in_rb[chan])
-			jack_ringbuffer_free(in_rb[chan]);
-		}
-	    if (out_rb[chan])
-		jack_ringbuffer_free(out_rb[chan]);
-	}
+        // 2. Free the ring buffers we allocated in haiku_jack_init
+        fprintf(stderr, "[JAMin-Stubs] Freeing ringbuffers...\n");
+        for (chan = 0; chan < bchannels; chan++) {
+            if (chan < nchannels && in_rb[chan]) {
+                jack_ringbuffer_free(in_rb[chan]);
+                in_rb[chan] = NULL;
+            }
+            if (out_rb[chan]) {
+                jack_ringbuffer_free(out_rb[chan]);
+                out_rb[chan] = NULL;
+            }
+        }
     }
 
-    if (trace_option)
-	io_list_trace();		/* list trace buffer contents */
+    // 3. Haiku Specific: You should tell the Media Roster to stop your node here
+    // BMediaRoster::Roster()->StopNode(your_node_id, 0, true);
+
+    fprintf(stderr, "[JAMin-Stubs] Cleanup complete.\n");
 }
 
 
-/* io_shutdown -- clean up all DSP I/O resources. */
 void io_shutdown(void *arg)
 {
+    // On Haiku, this might be triggered if the Media Server 
+    // crashes or the user removes the node in Cortex.
     jst.active = 0;
     io_cleanup();
 }
 
 
-/*  Silly little function to check file names for a valid, readable file
-    prior to trying to use them.  */
+
 
 gboolean check_file (char *optarg)
 {
@@ -713,11 +708,16 @@ gboolean check_file (char *optarg)
 
   if ((fp = fopen (optarg, "r")) == NULL)
     {
+      // Haiku uses standard POSIX paths, so fopen should work fine.
       errstr = g_strdup_printf(_("File %s : %s\nUsing default."), optarg, 
                                 strerror (errno));
       g_print("%s\n", errstr);
+      
+      // WARNING: If the GUI isn't fully initialized, this 'message' 
+      // call (which is a GTK dialog) might hang or crash.
       message (GTK_MESSAGE_ERROR, errstr);
-      free (errstr);
+      
+      g_free (errstr); // Use g_free for g_strdup_printf memory
       return (FALSE);
     }
 
@@ -726,58 +726,38 @@ gboolean check_file (char *optarg)
 }
 
 
-/****************  Initialization  ****************/
-
-/* io_jack_open -- open a connection with the JACK server
- *
- * Global variable client_name is a pointer to the client name string.
- * This may be modified as a side-effect, if JACK assigns a different
- * unique name for this session.
- */
 jack_client_t *io_jack_open()
 {
-#ifdef HAVE_JACK_CLIENT_OPEN
-    jack_status_t status;
+    fprintf(stderr, "[JAMin-IO] Intercepting jack_open for Haiku Media Kit...\n");
 
-    if (server_name) {
-	    client = jack_client_open(client_name, JackServerName,
-				      &status, server_name);
-    } else {
-	    client = jack_client_open(client_name, JackNullOption, &status);
-    }
+    /* 
+       1. Call your Haiku initialization stub.
+       This starts the BApplication, creates the JaminNode, 
+       and registers it with the Media Roster/Cortex.
+    */
+    client = (jack_client_t*)haiku_jack_init(client_name);
 
+    
     if (client == NULL) {
-	g_print(_("%s: jack_client_open() failed, status = 0x%2.0x\n"),
-		PACKAGE, status);
-	return NULL;
-    }
-    if (status & JackServerStarted) {
-	g_print(_("%s: JACK server started\n"), PACKAGE);
-    }
-    if (status & JackNameNotUnique) {
-	client_name = strdup(jack_get_client_name(client));
-	g_print(_("%s: unique name `%s' assigned\n"), PACKAGE, client_name);
+        fprintf(stderr, "[JAMin-IO] Haiku Media Kit initialization failed!\n");
+        return NULL;
     }
 
-#else /* !HAVE_JACK_CLIENT_OPEN */
+    // 2. Set the global status to "active" so JAMin's UI knows we are running
+    jst.active = 1;
+    jst.buf_size = 1024; // Typical Haiku default, will be updated by io_bufsize later
 
-    client = jack_client_new(client_name);
-    if (client == NULL) {
-	g_print(_("%s: Cannot contact JACK server, is it running?\n"), PACKAGE);
-    }
+    fprintf(stderr, "[JAMin-IO] Haiku Bridge Active. Node ready for Cortex.\n");
 
-#endif /* HAVE_JACK_CLIENT_OPEN */
-
+    /* 
+       3. Return your "fake" client pointer. 
+       (Since haiku_jack_init returns (void*)1, this satisfies JAMin's null checks)
+    */
     return client;
-
 }
 
-/* io_init -- initialize DSP engine.
- *
- *  DSP engine state transitions:
- *	DSP_INIT -> DSP_STOPPED		when -d command option set
- *	DSP_INIT <unchanged>		otherwise
- */
+
+
 void io_init(int argc, char *argv[])
 {
     int chan;
@@ -786,9 +766,9 @@ void io_init(int argc, char *argv[])
 
     spectrum_freq = 10;
     crossfade_time = 1.0;
-	gui_mode = 0;
+    gui_mode = 0;
 
-    /* basename $0 */
+  /* basename $0 */
     pname = strrchr(argv[0], '/');
     if (pname == 0)
 	pname = argv[0];
@@ -916,350 +896,182 @@ void io_init(int argc, char *argv[])
 	exit(1);
     }
 
+   
 
     if (dummy_mode) {
-	io_new_state(DSP_STOPPED);
-	io_bufsize(1024, NULL);
-	jst.sample_rate = 48000;
-	process_init(48000.0f);
-	return;
+        dsp_state = DSP_STOPPED; // Removed io_new_state static dependency
+        io_bufsize(1024, NULL);
+        jst.sample_rate = 48000;
+        process_init(48000.0f);
+        return;
     }
 
-    /* register as a JACK client */
+    /* 1. Register as a Haiku Media Node (via your bridge) */
     if (!client_name) {
-	client_name = strdup(PACKAGE);
+        client_name = strdup(PACKAGE);
     }
 
+
+/* In io.c, after haiku_jack_init is called */
+client = haiku_jack_init("jamin");
+
+if (client) {
+    // Manually force the state machine to RUNNING
+    // This bypasses the need for a real jack_activate() call
+    dsp_state = DSP_RUNNING; 
+    have_dsp_thread = 1;  // Tell io_process to use the ringbuffers
+    
+    fprintf(stderr, "[JAMin-IO] Haiku Bridge Active. Node ready for Cortex.\n");
+}
+
+
+    /* 
+       This calls your haiku_jack_init. 
+       It MUST happen before we try to get the sample rate or buffer size.
+    */
     client = io_jack_open();
     if (client == NULL) {
-	exit(2);
+        fprintf(stderr, "[JAMin-IO] Failed to initialize Haiku Media Bridge\n");
+        exit(2);
     }
 
-    /* set JACK callback functions */
+    /* 
+       2. Stub out JACK callbacks.
+       In your port, these functions (jack_set_...) should be empty stubs 
+       in jack_stubs.cpp because your Media Node handles the callbacks now.
+    */
     jack_set_process_callback(client, io_process, NULL);
     jack_on_shutdown(client, io_shutdown, NULL);
     jack_set_xrun_callback(client, io_xrun, NULL);
     jack_set_buffer_size_callback(client, io_bufsize, NULL);
 
-    /* set initial buffer size and sample rate */
+    /* 
+       3. Initialize DSP Engine parameters.
+       We manually set these because we aren't getting them from a JACK server.
+    */
+    if (dsp_block_size == 0) dsp_block_size = 1024; 
     dsp_block_bytes = dsp_block_size * sizeof(jack_default_audio_sample_t);
-    io_bufsize(jack_get_buffer_size(client), NULL);
-    jst.sample_rate = jack_get_sample_rate(client);
+    
+    // Set a default sample rate for Haiku (usually 44100 or 48000)
+    jst.sample_rate = 44100; 
 
-    /* initialize process_signal() */
+    /* 
+       4. Kickstart process_signal.
+       This allocates the FFT buffers and crossover filters.
+    */
     process_init((float) jst.sample_rate);
+    
+    fprintf(stderr, "[JAMin-IO] Engine init complete. SR: %d, Block: %zu\n", 
+            jst.sample_rate, dsp_block_size);
+   
 }
 
 
-/* io_create_dsp_thread -- create DSP engine thread.
- *
- *  returns:	0 if successful, error code otherwise.
- */
+
+
+#include <OS.h> // For Haiku priority constants
+
 int io_create_dsp_thread()
 {
+	set_thread_priority(find_thread(NULL), B_URGENT_DISPLAY_PRIORITY + 10);
     int rc;
-    int policy;
-    struct sched_param rt_param;
-    pthread_attr_t attributes;
-    pthread_attr_init(&attributes);
-#ifndef HAVE_JACK_CREATE_THREAD
-    struct sched_param my_param;
-#endif
+    
+    fprintf(stderr, "[JAMin-IO] Creating DSP thread for Haiku...\n");
 
-    /* Set priority and scheduling parameters based on the attributes
-     * of the JACK client thread. */
-    rc = pthread_getschedparam(jack_client_thread_id(client),
-			       &policy, &rt_param);
-    if (rc) {
-	io_errlog(EPERM, "cannot get JACK scheduling params, rc = %d.", rc);
-	return rc;
-    }
-
-    /* Check if JACK is running with --realtime option. */
-    jst.realtime = jack_is_realtime(client);
-
-    if (jst.realtime) {
-	IF_DEBUG(DBG_TERSE,
-		 io_trace("JACK realtime priority = %d",
-			  rt_param.sched_priority));
-	rt_param.sched_priority -= DSP_PRIORITY_DIFF;
-	IF_DEBUG(DBG_TERSE,
-		 io_trace("DSP realtime priority = %d",
-			  rt_param.sched_priority));
-    } else
-	IF_DEBUG(DBG_TERSE, io_trace("JACK subsystem not realtime"));
-
-#ifdef HAVE_JACK_CREATE_THREAD		/* JACK thread support */
-#ifdef HAVE_JACK_CLIENT_CREATE_THREAD	/* newer interface */
-
-    rc = jack_client_create_thread(client, &dsp_thread, rt_param.sched_priority,
-				   jst.realtime, io_dsp_thread, NULL);
-
-#else  /* older interface */
-
-    rc = jack_create_thread(&dsp_thread, rt_param.sched_priority,
-			    jst.realtime, io_dsp_thread, NULL);
-
-#endif /* HAVE_JACK_CLIENT_CREATE_THREAD */
-
-    switch (rc) {
-    case 0:
-	IF_DEBUG(DBG_TERSE, io_trace("DSP thread created"));
-	break;
-    case EPERM:
-	io_errlog(EPERM, "no realtime privileges for DSP thread");
-	break;
-    default:
-	io_errlog(rc, "error creating DSP thread");
-    }
-
-#else  /* no JACK thread creation support */
-
-    rc = pthread_attr_setschedpolicy(&attributes, policy);
-    if (rc) {
-	io_errlog(EPERM, "cannot set scheduling policy, rc = %d.", rc);
-	return rc;
-    }
-
-    rc = pthread_attr_setscope(&attributes, PTHREAD_SCOPE_SYSTEM);
-    if (rc) {
-	io_errlog(EPERM, "cannot set RT scheduling scope, rc = %d.", rc);
-	return rc;
-    }
-
-    rc = pthread_attr_setschedparam(&attributes, &rt_param);
-    if (rc) {
-	io_errlog(EPERM, "cannot set RT priority, rc = %d.", rc);
-	return rc;
-    }
-
-    /* this should work, but using capabilities it often doesn't */
-    rc = pthread_create(&dsp_thread, &attributes, io_dsp_thread, NULL);
-    if (rc == 0) {
-	IF_DEBUG(DBG_TERSE, io_trace("DSP thread created"));
-	return 0;
-    }
-
-#ifdef HAVE_POSIX_SCHED
-
-    IF_DEBUG(DBG_TERSE, io_trace("first pthread_create() returns %d\n", rc));
-
-    /* The following comment was copied from jack/libjack/client.c
-     * along with most of this code... */
-
-    /* the version of glibc I've played with has a bug that makes
-       that code fail when running under a non-root user but with the
-       proper realtime capabilities (in short,  pthread_attr_setschedpolicy 
-       does not check for capabilities, only for the uid being
-       zero). Newer versions apparently have this fixed. This
-       workaround temporarily switches the client thread to the
-       proper scheduler and priority, then starts the realtime
-       thread so that it can inherit them and finally switches the
-       client thread back to what it was before. Sigh. For ardour
-       I have to check again and switch the thread explicitly to
-       realtime, don't know why or how to debug - nando
-    */
-
-    /* get current scheduler and parameters of the client process */
-    if ((policy = sched_getscheduler(0)) < 0) {
-	io_errlog(EPERM,
-		  "Cannot get current client scheduler: %s",
-		  strerror(errno));
-	return -1;
-    }
-
-    memset(&my_param, 0, sizeof(my_param));
-    if (sched_getparam(0, &my_param)) {
-	io_errlog(EPERM,
-		  "Cannot get current client scheduler parameters: %s",
-		  strerror(errno));
-	return -1;
-    }
-
-    /* temporarily change the client process to SCHED_FIFO so that
-       the realtime thread can inherit the scheduler and priority
-    */
-    if (sched_setscheduler(0, SCHED_FIFO, &rt_param)) {
-	io_errlog(EPERM, "Cannot temporarily set RT scheduling: %s",
-		  strerror(errno));
-	return -1;
-    }
-
-    /* prepare the attributes for the realtime thread */
-    pthread_attr_init(&attributes);
-    if ((pthread_attr_setscope(&attributes, PTHREAD_SCOPE_SYSTEM)) ||
-	(pthread_attr_setinheritsched(&attributes, PTHREAD_INHERIT_SCHED))) {
-	sched_setscheduler(0, policy, &my_param);
-	io_errlog(EPERM, "Cannot set RT thread attributes");
-	return -1;
-    }
-
-    /* create the RT thread */
-    rc = pthread_create(&dsp_thread, &attributes, io_dsp_thread, NULL);
+    /* 1. Create the thread simply using pthread */
+    rc = pthread_create(&dsp_thread, NULL, io_dsp_thread, NULL);
+    
     if (rc != 0) {
-	sched_setscheduler(0, policy, &my_param);
-
-        errstr = g_strdup_printf(
-	    _("%s: not permitted to create realtime DSP thread.\n"
-	      "\tYou must run as root or use JACK capabilities.\n"
-	      "\tContinuing operation, but with -t option.\n"), PACKAGE);
-        g_print(stderr, "%s\n", errstr);
-        message (GTK_MESSAGE_WARNING, errstr);
-        free (errstr);
-
-	IF_DEBUG(DBG_TERSE,
-		 io_trace("second pthread_create() returns %d\n", rc));
-	return rc;
+        fprintf(stderr, "[JAMin-IO] Error creating DSP thread: %d\n", rc);
+        return rc;
     }
 
-    /* return this thread to the scheduler it used before */
-    sched_setscheduler(0, policy, &my_param);
-    IF_DEBUG(DBG_TERSE, io_trace("DSP thread finally created"));
-    rc = 0;
-#endif /* HAVE_POSIX_SCHED */
-#endif /* HAVE_JACK_CREATE_THREAD */
+    /* 
+       2. Set Haiku-specific Realtime Priority.
+       Since we aren't using JACK's priority inheritance, we manually
+       set this thread to a high audio priority so it doesn't stutter.
+    */
+    thread_id haiku_tid = find_thread(NULL); // This logic needs to be inside the thread usually, 
+                                             // or use the pthread_get_thread_id_np if available.
+    
+    // Alternative: We can set the priority from WITHIN io_dsp_thread 
+    // at the very beginning of that function:
+    // set_thread_priority(find_thread(NULL), B_REAL_TIME_DISPLAY_PRIORITY);
 
-    return rc;
+    jst.realtime = 1; 
+    have_dsp_thread = 1;
+
+    fprintf(stderr, "[JAMin-IO] DSP thread created successfully.\n");
+    return 0;
 }
 
 
-/* io_activate -- activate DSP engine.
- *
- *  DSP engine state transitions:
- *	DSP_INIT -> DSP_ACTIVATING
- *	DSP_ACTIVATING -> DSP_RUNNING	if no DSP thread available
- *	DSP_STOPPED <unchanged>		do nothing if engine already stopped
- */
+
 void io_activate()
 {
     int chan;
     size_t bufsize;
 
-    if (DSP_STATE_IS(DSP_STOPPED))
-	return;
+    if (dsp_state == DSP_STOPPED)
+        return;
 
-    io_new_state(DSP_ACTIVATING);
+    dsp_state = DSP_ACTIVATING;
+    fprintf(stderr, "[JAMin-IO] Activating Haiku Engine...\n");
 
+    /* 1. Register Ports via your stubs */
     for (chan = 0; chan < nchannels; chan++) {
-
-		input_ports[chan] =
-			jack_port_register(client, in_names[chan],
-					   JACK_DEFAULT_AUDIO_TYPE,
-					   JackPortIsInput, 0);
-
-		if (input_ports[chan] == NULL) {
-			g_print(_("%s: Cannot register JACK ports."), PACKAGE);
-			exit(2);
-		}
+        input_ports[chan] = jack_port_register(client, in_names[chan], NULL, 0, 0);
     }
  
     for (chan = 0; chan < bchannels; chan++) {
-		output_ports[chan] =
-			jack_port_register(client, out_names[chan],
-					   JACK_DEFAULT_AUDIO_TYPE,
-					   JackPortIsOutput, 0);
-
-		if (output_ports[chan] == NULL) {
-			g_print(_("%s: Cannot register JACK ports."), PACKAGE);
-			exit(2);
-		}
+        output_ports[chan] = jack_port_register(client, out_names[chan], NULL, 0, 0);
     }   
-
-
-    if (jack_activate(client)) {
-	g_print(_("%s: Cannot activate JACK client."), PACKAGE);
-	exit(2);
+    
+   /* 4. Allocate DSP engine ringbuffers. */
+    // Ensure NCHUNKS is defined (usually 4)
+    bufsize = dsp_block_bytes * 4; 
+    
+    for (chan = 0; chan < bchannels; chan++) {
+        if (chan < nchannels) {
+            in_rb[chan] = jack_ringbuffer_create(bufsize);
+            if (in_rb[chan]) memset(in_rb[chan]->buf, 0, bufsize);
+        }	
+        out_rb[chan] = jack_ringbuffer_create(bufsize);
+        if (out_rb[chan]) memset(out_rb[chan]->buf, 0, bufsize);
     }
+
+    /* 2. Stub out jack_activate */
+    // In your jack_stubs.cpp, make this return 0
+    jack_activate(client);
 
     jst.active = 1;
 
-    /* connect any required JACK ports */
-    if (connect_ports) {
+    /* 3. Skip JACK auto-connect logic. 
+       On Haiku, the user connects pins visually in Cortex. 
+    */
 
-	const char **pports = NULL;
 
-	if (oports[0] == NULL) {	/* no output ports specified? */
 
-	    pports = jack_get_ports (client, NULL, JACK_DEFAULT_AUDIO_TYPE,
-				     JackPortIsPhysical|JackPortIsInput);
-	    if (pports) {
-		/* use first `bchannels' physical playback ports */
-		for (chan = 0; chan < bchannels && pports[chan]; chan++) {
-		    oports[chan] = pports[chan];
-		}
-	    } else {
-		errstr = g_strdup_printf(_("No physical playback ports found"));
-		g_print("%s\n", errstr);
-		message (GTK_MESSAGE_WARNING, errstr);
-		free (errstr);
-	    }
-	}
-
-	for (chan = 0; chan < bchannels; chan++) {
-		if ( chan < nchannels ) {
-			if (iports[chan] && *iports[chan]) {
-			if (jack_connect(client, iports[chan],
-					 jack_port_name(input_ports[chan]))) {
-						errstr = g_strdup_printf(
-							_("Cannot connect input port \"%s\"\n"), iports[chan]);
-						g_print("%s\n", errstr);
-						message (GTK_MESSAGE_WARNING, errstr);
-						free (errstr);
-			}
-			}
-		}
-	    if (oports[chan] && *oports[chan]) {
-		if (jack_connect(client, jack_port_name(output_ports[chan]),
-				 oports[chan])) {
-                    errstr = g_strdup_printf(
-                        _("Cannot connect output port \"%s\"\n"), oports[chan]);
-                    g_print("%s\n", errstr);
-                    message (GTK_MESSAGE_WARNING, errstr);
-                    free (errstr);
-		}
-	    }
-	}
-
-	if (pports)
-	    free(pports);
-    }
-    
-
-    
-    
-
-    /* Allocate DSP engine ringbuffers.  Be careful to get the sizes
-     * right, they are important for correct operation.  If we are
-     * running realtime, jack_activate() will already have called
-     * mlockall() for this address space.  So, all we need to do is
-     * touch all the pages in the buffers. */
-    bufsize = dsp_block_bytes * NCHUNKS;
-    for (chan = 0; chan < bchannels; chan++) {
-		if(chan < nchannels){
-			in_rb[chan] = jack_ringbuffer_create(bufsize);
-			memset(in_rb[chan]->buf, 0, bufsize);
-		}	
-		out_rb[chan] = jack_ringbuffer_create(bufsize);
-		memset(out_rb[chan]->buf, 0, bufsize);
-    }
-
-    /* create DSP thread, if desired and able */
+    /* 5. Create DSP thread */
     pthread_mutex_lock(&lock_dsp);
     if (thread_option) {
-	have_dsp_thread = (io_create_dsp_thread() == 0);
+        have_dsp_thread = (io_create_dsp_thread() == 0);
     } else {
-	IF_DEBUG(DBG_TERSE, io_trace("no DSP thread created"));
-	have_dsp_thread = 0;
+        have_dsp_thread = 0;
     }
-    if (!have_dsp_thread)
-	io_new_state(DSP_RUNNING);
 
-    /* If we run the DSP in a separate thread, there will be some
-     * additional latency caused by the extra buffering. */
+    // If thread started, io_dsp_thread will move state to RUNNING.
+    // If not, we move it manually here.
+    if (!have_dsp_thread) {
+        dsp_state = DSP_RUNNING;
+    }
+
+    /* 6. Set Latency for the UI */
     io_set_latency(LAT_BUFFERS,
-		   (have_dsp_thread &&
-		    (dsp_block_size > jst.buf_size)? dsp_block_size: 0));
+                   (have_dsp_thread && (dsp_block_size > jst.buf_size) ? dsp_block_size : 0));
+    
     pthread_mutex_unlock(&lock_dsp);
+    
+    fprintf(stderr, "[JAMin-IO] Activation complete. State: %d\n", dsp_state);
 }
 
-/* vi:set ts=8 sts=4 sw=4: */

@@ -29,9 +29,13 @@ void plugin_init()
 	if (getenv("LADSPA_PATH")) {
 		plugin_path = getenv("LADSPA_PATH");
 	} else {
-		plugin_path = "/usr/local/lib/ladspa:" PACKAGE_LIB_DIR "/ladspa";
+		/* Prioritize Haiku-specific paths over Linux defaults */
+		plugin_path = "/boot/home/config/non-packaged/lib/ladspa:"
+		              "/boot/system/add-ons/ladspa:"
+		              "/boot/home/config/add-ons/ladspa";
 	}
 }
+
 
 plugin *plugin_load(char *file)
 {

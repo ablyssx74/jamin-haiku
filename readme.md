@@ -19,6 +19,7 @@ make install
 
 ### Build / Test jamin:
 ```
+make clean
 ./configure JACK_CFLAGS="-I." JACK_LIBS="-L$(pwd) -ljack"
 make CFLAGS="-fcommon -I." LDFLAGS="-L$(pwd) -ljack"
 

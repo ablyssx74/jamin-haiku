@@ -93,7 +93,9 @@
 extern volatile int global_main_gui;
 extern volatile int global_multiout_gui;
 
-extern const jack_nframes_t dsp_block_size;
+//extern const jack_nframes_t dsp_block_size;
+extern size_t dsp_block_size;
+
 extern float sample_rate;
 extern float eq_coefs[];
 extern float in_peak[], out_peak[], rms_peak[];

@@ -93,7 +93,7 @@
 #include "scenes.h"
 #include "spectrum.h"
 #include "preferences.h"
-
+#include <unistd.h>
 
 /*  What I'm referring to as notches are actually slidable parametric EQ 
     controls.  */
@@ -230,8 +230,17 @@ void clean_quit ()
     /* free global session filename */
 
     s_set_session_filename (NULL);
+    
+    GList *list = gtk_window_list_toplevels();
+    while (list) {
+        gtk_widget_destroy(GTK_WIDGET(list->data));
+        list = list->next;
+    }
+
 
     gtk_main_quit();
+
+    _exit(0); 
 }
 
 

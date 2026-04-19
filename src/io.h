@@ -29,6 +29,10 @@ extern jack_client_t *client;		/* JACK client structure */
 extern char *client_name;		/* JACK client name */
 extern int nchannels;			/* actual number of channels */
 extern int bchannels;		/* actual number of output channels */
+
+extern size_t dsp_block_size;
+extern size_t dsp_block_bytes;
+
 extern jack_port_t *input_ports[];
 extern jack_port_t *output_ports[];
 

@@ -141,7 +141,9 @@ fftwf_plan plan_rc = NULL, plan_cr = NULL;
 float sample_rate = 0.0f;
 
 /* Desired block size for calling process_signal(). */
-const jack_nframes_t dsp_block_size = BINS / OVER_SAMP;
+//jack_nframes_t dsp_block_size = BINS / OVER_SAMP;
+extern size_t dsp_block_size;
+
 
 #ifdef FILTER_TUNING
 float ft_bias_a_val = 1.0f;
@@ -241,7 +243,7 @@ void process_init(float fs)
         Sampo Savolainen's foo_limiter.  */
 
     lim_plugin[FAST] = plugin_load("fast_lookahead_limiter_1913.so");
-    lim_plugin[FOO] = plugin_load("foo_limiter.so");
+    //lim_plugin[FOO] = plugin_load("foo_limiter.so");
 
     if (lim_plugin[limiter_plugin] == NULL) {
       limiter_plugin ^= 1;
