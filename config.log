@@ -439,7 +439,7 @@ configure:14529: checking how to hardcode library paths into programs
 configure:14554: result: immediate
 configure:14665: checking for shl_load
 configure:14665: gcc -o conftest -g -O2   conftest.c  >&5
-/boot/system/develop/tools/bin/../lib/gcc/x86_64-unknown-haiku/13.3.0/../../../../x86_64-unknown-haiku/bin/ld: /tmp//ccQPA8CC.o: in function `main':
+/boot/system/develop/tools/bin/../lib/gcc/x86_64-unknown-haiku/13.3.0/../../../../x86_64-unknown-haiku/bin/ld: /tmp//ccn4UhYR.o: in function `main':
 /boot/home/Dev/jamin-haiku/conftest.c:50:(.text.startup+0x5): undefined reference to `shl_load'
 collect2: error: ld returned 1 exit status
 configure:14665: $? = 1
@@ -600,7 +600,7 @@ configure:15913: $? = 0
 configure:15925: result: yes
 configure:15938: checking for sched_getscheduler
 configure:15938: gcc -o conftest    conftest.c -lpthread  >&5
-/boot/system/develop/tools/bin/../lib/gcc/x86_64-unknown-haiku/13.3.0/../../../../x86_64-unknown-haiku/bin/ld: /tmp//ccSWawRz.o: in function `main':
+/boot/system/develop/tools/bin/../lib/gcc/x86_64-unknown-haiku/13.3.0/../../../../x86_64-unknown-haiku/bin/ld: /tmp//ccrZBoZJ.o: in function `main':
 conftest.c:(.text+0x5): undefined reference to `sched_getscheduler'
 collect2: error: ld returned 1 exit status
 configure:15938: $? = 1
@@ -1065,7 +1065,7 @@ configure:17179: $? = 0
 configure:17179: result: yes
 configure:17188: checking for ngettext in libc
 configure:17207: gcc -o conftest    conftest.c -lm -lm -lpthread  >&5
-/boot/system/develop/tools/bin/../lib/gcc/x86_64-unknown-haiku/13.3.0/../../../../x86_64-unknown-haiku/bin/ld: /tmp//ccLIgL9p.o: in function `main':
+/boot/system/develop/tools/bin/../lib/gcc/x86_64-unknown-haiku/13.3.0/../../../../x86_64-unknown-haiku/bin/ld: /tmp//ccpXPRBN.o: in function `main':
 conftest.c:(.text+0x1e): undefined reference to `libintl_ngettext'
 collect2: error: ld returned 1 exit status
 configure:17207: $? = 1

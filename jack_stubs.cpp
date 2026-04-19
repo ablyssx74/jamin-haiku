@@ -110,10 +110,11 @@ public:
     fOutput.source.port = ControlPort();
 	fOutput.source.id = 0;
 	fOutput.node = Node();
+	
 
     }
     media_output fOutput; 
-
+	BBufferGroup* fBufferGroup = NULL;
 
 status_t PublicSendBuffer(BBuffer* b, const media_source& source, const media_destination& destination) {
     return BBufferProducer::SendBuffer(b, source, destination);
@@ -156,15 +157,20 @@ virtual void NodeRegistered() override {
 
     // --- CONSUMER VIRTUALS (Input Pins) ---
 virtual status_t AcceptFormat(const media_destination& dest, media_format* format) override {
-    // If the mixer asks "what do you support?", say "Anything Raw Audio"
-    if (format->type == B_MEDIA_NO_TYPE) {
-        format->type = B_MEDIA_RAW_AUDIO;
-        format->u.raw_audio = media_raw_audio_format::wildcard;
-    }
+    if (format->type == B_MEDIA_NO_TYPE) format->type = B_MEDIA_RAW_AUDIO;
+    if (format->type != B_MEDIA_RAW_AUDIO) return B_MEDIA_BAD_FORMAT;
     
-    // Always return B_OK to allow the Media Roster to manage the connection
-    return B_OK; 
+    // Set our requirements
+    format->u.raw_audio.frame_rate = 44100.0f;
+    format->u.raw_audio.channel_count = 2;
+    format->u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
+    format->u.raw_audio.byte_order = B_MEDIA_HOST_ENDIAN;
+    format->u.raw_audio.buffer_size = 4096; 
+    
+    return B_OK;
 }
+
+
 
 
 
@@ -180,56 +186,99 @@ virtual status_t AcceptFormat(const media_destination& dest, media_format* forma
 	}
     virtual void DisposeInputCookie(int32) override {}
     
-    
+
 virtual void BufferReceived(BBuffer* b) override {
+    // 1. Check State (3 = B_RUNNING)
+    int32 state = this->RunState();
+    static int state_check = 0;
+    if (state_check++ % 100 == 0) {
+        fprintf(stderr, "[JAMin-Debug] Node State: %s (%d)\n", 
+                (state == 3) ? "RUNNING" : "STOPPED", (int)state);
+    }
+
     if (!b || !in_rb[0] || !out_rb[0]) {
         if (b) b->Recycle();
         return;
     }
 
-    float* data = (float*)b->Data();
+    float* incomingData = (float*)b->Data();
     size_t nFrames = b->SizeUsed() / (sizeof(float) * 2);
     size_t nBytesPerChannel = nFrames * sizeof(float);
 
-    // 1. Write Input
+    // 2. Feed Input
     for (size_t i = 0; i < nFrames; i++) {
-        jack_ringbuffer_write(in_rb[0], (const char*)&data[i * 2], sizeof(float));
-        jack_ringbuffer_write(in_rb[1], (const char*)&data[i * 2 + 1], sizeof(float));
+        jack_ringbuffer_write(in_rb[0], (const char*)&incomingData[i * 2], sizeof(float));
+        jack_ringbuffer_write(in_rb[1], (const char*)&incomingData[i * 2 + 1], sizeof(float));
     }
 
-    // 2. Wake Engine
+    // 3. Wake Engine
     pthread_mutex_lock(&lock_dsp);
     pthread_cond_signal(&run_dsp);
     pthread_mutex_unlock(&lock_dsp);
 
-    // 3. THE FIX: Drain ALL Output Channels (0 through 7)
-    for (int i = 0; i < bchannels; i++) {
-        size_t available = jack_ringbuffer_read_space(out_rb[i]);
-        
-        if (i < 2) { 
-            // MASTER OUTPUT (0 and 1): Move this to the Haiku buffer
-            if (available >= nBytesPerChannel) {
-                for (size_t f = 0; f < nFrames; f++) {
-                    jack_ringbuffer_read(out_rb[i], (char*)&data[f * 2 + i], sizeof(float));
-                }
-            } else {
-                memset(data, 0, b->SizeUsed()); // Silence if not ready
-            }
-        } else {
-            // CROSSOVER BANDS (2 through 7): Discard to clear the "pipe"
-            if (available >= nBytesPerChannel) {
-                jack_ringbuffer_read_advance(out_rb[i], nBytesPerChannel);
-            }
-        }
+    // 4. Handle Output Buffer
+    BBuffer* outBuffer = NULL;
+    bool usingNewBuffer = false;
+    if (fBufferGroup) {
+        outBuffer = fBufferGroup->RequestBuffer(b->SizeUsed(), 0);
+        if (outBuffer) usingNewBuffer = true;
+    }
+    if (!outBuffer) {
+        outBuffer = b;
+        usingNewBuffer = false;
     }
 
-    // 4. Send to Speakers
+    float* outData = (float*)outBuffer->Data();
+
+    // 5. Drain DSP and Generate Tone
+    static float phase = 0.0f;
+    size_t availL = jack_ringbuffer_read_space(out_rb[0]);
+    size_t availR = jack_ringbuffer_read_space(out_rb[1]);
+
+    for (size_t f = 0; f < nFrames; f++) {
+        float sL = 0.0f, sR = 0.0f;
+        if (availL >= sizeof(float) && availR >= sizeof(float)) {
+            jack_ringbuffer_read(out_rb[0], (char*)&sL, sizeof(float));
+            jack_ringbuffer_read(out_rb[1], (char*)&sR, sizeof(float));
+            availL -= sizeof(float);
+            availR -= sizeof(float);
+        }
+        float buzz = sinf(phase) * 0.1f;
+        phase += 0.0157f;
+        if (phase > 6.2831f) phase -= 6.2831f;
+
+        outData[f * 2]     = sL + buzz;
+        outData[f * 2 + 1] = sR + buzz;
+    }
+
+    for (int i = 2; i < bchannels; i++) {
+        size_t bandAvail = jack_ringbuffer_read_space(out_rb[i]);
+        if (bandAvail >= nBytesPerChannel)
+            jack_ringbuffer_read_advance(out_rb[i], nBytesPerChannel);
+    }
+
+    // 6. Finalize and Send
     if (fOutput.destination != media_destination::null) {
-        PublicSendBuffer(b, fOutput.source, fOutput.destination);
+        media_header* hdr = outBuffer->Header();
+        hdr->type = B_MEDIA_RAW_AUDIO;
+        hdr->size_used = outBuffer->Size();
+        // FORCE the start_time to 'now'
+        hdr->start_time = TimeSource()->Now(); 
+
+        if (PublicSendBuffer(outBuffer, fOutput.source, fOutput.destination) != B_OK) {
+            outBuffer->Recycle();
+        }
+        if (usingNewBuffer) b->Recycle();
     } else {
-        b->Recycle();
+        outBuffer->Recycle();
+        if (usingNewBuffer) b->Recycle();
     }
 }
+
+
+
+
+
 
 
 
@@ -255,16 +304,19 @@ virtual status_t Connected(const media_source& s, const media_destination& d,
 virtual void Connect(status_t error, const media_source& source, 
                      const media_destination& destination, 
                      const media_format& format, char* ioName) override {
-
     if (error == B_OK) {
         fOutput.destination = destination;
         fOutput.source = source;
-        fOutput.format = format;
+        
+        // If the consumer (e.g. HD Audio) hasn't called SetBufferGroup yet,
+        // we create a local one to ensure we are sending official BBuffers.
+        if (fBufferGroup == NULL) {
+            fprintf(stderr, "[JAMin-Debug] No group provided by consumer. Creating local group.\n");
+            fBufferGroup = new BBufferGroup(8192, 8); // 8 buffers, slightly larger for safety
+        }
+        
         fprintf(stderr, "[JAMin-Debug] Connection LIVE to Port %d\n", (int)destination.port);
-    } else {
-        fprintf(stderr, "[JAMin-Debug] Connection FAILED: %s\n", strerror(error));
     }
-    fflush(stderr);
 }
 
 
@@ -290,16 +342,46 @@ virtual status_t GetNextOutput(int32* cookie, media_output* out_output) override
 
 
     virtual status_t DisposeOutputCookie(int32) override { return B_OK; }
-    virtual status_t SetBufferGroup(const media_source&, BBufferGroup*) override { return B_OK; }
-virtual status_t PrepareToConnect(const media_source& source, const media_destination& destination, 
-                                 media_format* format, media_source* out_source, char* out_name) override {
-    if (format->type != B_MEDIA_RAW_AUDIO) return B_MEDIA_BAD_FORMAT;
-    *out_source = fOutput.source; // Use the source you initialized in the constructor
-    strncpy(out_name, "JAMin Output", B_MEDIA_NAME_LENGTH);
+    
+    
+virtual status_t SetBufferGroup(const media_source& for_source, BBufferGroup* group) override {
+    if (for_source != fOutput.source) return B_MEDIA_BAD_SOURCE;
+    
+    // Save the hardware's preferred buffer group
+    fBufferGroup = group;
+    fprintf(stderr, "[JAMin-Debug] Hardware provided a BufferGroup.\n");
     return B_OK;
 }
-    //virtual void Connect(status_t, const media_source&, const media_destination&, const media_format&, char*) override {}
-    virtual void Disconnect(const media_source&, const media_destination&) override {}
+    
+    
+virtual status_t PrepareToConnect(const media_source& source, const media_destination& destination, 
+                                 media_format* format, media_source* out_source, char* out_name) override {
+    // 1. Basic Format Validation
+    if (format->type != B_MEDIA_RAW_AUDIO) return B_MEDIA_BAD_FORMAT;
+
+    // 2. Set our Preferred Format (Matches your engine)
+    format->u.raw_audio.frame_rate = 44100.0f;
+    format->u.raw_audio.channel_count = 2;
+    format->u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
+    format->u.raw_audio.byte_order = B_MEDIA_HOST_ENDIAN;
+    
+    // Most hardware prefers a specific buffer size (usually 4096 bytes for 1024 frames)
+    format->u.raw_audio.buffer_size = 4096; 
+
+    // 3. Return our source and name
+    *out_source = fOutput.source;
+    strncpy(out_name, "JAMin Master Out", B_MEDIA_NAME_LENGTH);
+
+    return B_OK;
+}
+
+virtual void Disconnect(const media_source& source, const media_destination& destination) override {
+    if (source == fOutput.source) {
+        fOutput.destination = media_destination::null;
+        fBufferGroup = NULL;
+   		 }
+}
+    
     virtual void LateNoticeReceived(const media_source&, bigtime_t, bigtime_t) override {}
     virtual void EnableOutput(const media_source&, bool, int32*) override {}
    
@@ -640,61 +722,42 @@ const char** jack_get_ports(jack_client_t c, const char* n, const char* t, unsig
             while (be_app == NULL) snooze(10000); 
         }
 
-        // 1. Set engine constants
-        nchannels = 2;
-        bchannels = 8;
-        dsp_block_size = 1024;
-        dsp_block_bytes = dsp_block_size * sizeof(float);
+    nchannels = 2;
+    bchannels = 8;
+    dsp_block_size = 1024;
+    dsp_block_bytes = dsp_block_size * sizeof(float);
 
-        // 2. ALLOCATE ALL RINGBUFFERS (64KB each)
-        size_t rb_size = 65536; 
-        for (int i = 0; i < bchannels; i++) {
-            if (i < nchannels) {
-                in_rb[i] = jack_ringbuffer_create(rb_size);
-                if (in_rb[i]) jack_ringbuffer_reset(in_rb[i]);
-            }
-            out_rb[i] = jack_ringbuffer_create(rb_size);
-            if (out_rb[i]) jack_ringbuffer_reset(out_rb[i]);
+    size_t rb_size = 65536; 
+    for (int i = 0; i < bchannels; i++) {
+        // IMPORTANT: Only create and reset in_rb for the 2 input channels
+        if (i < nchannels) {
+            in_rb[i] = jack_ringbuffer_create(rb_size);
+            if (in_rb[i]) jack_ringbuffer_reset(in_rb[i]);
+        } else {
+            in_rb[i] = NULL; // Ensure unused inputs are null
         }
-        fprintf(stderr, "[JAMin-Stub] %d In / %d Out Ringbuffers allocated.\n", nchannels, bchannels);
-
-        // 3. Setup the Node
-        g_jamin_node = new JaminNode();
-        BMediaRoster* roster = BMediaRoster::Roster();
         
-        // Publish to Media Server
-        status_t err = roster->RegisterNode(g_jamin_node);
-        if (err != B_OK) {
-            fprintf(stderr, "[JAMin-Error] Failed to register node: %s\n", strerror(err));
-            return NULL;
-        }
-
-        // Give the Media Server a moment to acknowledge the new node
-        snooze(20000);
-
-        // 4. TimeSource and Start
-        media_node timeSource;
-        if (roster->GetTimeSource(&timeSource) == B_OK) {
-            roster->SetTimeSourceFor(g_jamin_node->Node().node, timeSource.node);
-            
-            BTimeSource* ts = roster->MakeTimeSourceFor(timeSource);
-            if (ts) {
-                // Start immediately using the current performance time
-                bigtime_t now = ts->Now();
-                err = roster->StartNode(g_jamin_node->Node(), now);
-                ts->Release();
-                
-                if (err == B_OK) {
-                    fprintf(stderr, "[JAMin] Node Started successfully at %lld.\n", now);
-                } else {
-                    fprintf(stderr, "[JAMin-Error] StartNode failed: %s\n", strerror(err));
-                }
-            }
-        }
-
-        fprintf(stderr, "[JAMin] Init complete. Connect pins in Cortex.\n");
-        return (void*)g_jamin_node;   
+        // Always create 8 outputs for the crossover bands
+        out_rb[i] = jack_ringbuffer_create(rb_size);
+        if (out_rb[i]) jack_ringbuffer_reset(out_rb[i]);
     }
+
+    g_jamin_node = new JaminNode();
+    BMediaRoster* roster = BMediaRoster::Roster();
+    roster->RegisterNode(g_jamin_node);
+    
+    media_node timeSource;
+    roster->GetTimeSource(&timeSource);
+    roster->SetTimeSourceFor(g_jamin_node->Node().node, timeSource.node);
+    
+    BTimeSource* ts = roster->MakeTimeSourceFor(timeSource);
+    // Use a slight delay (50ms) to ensure the server is ready
+    bigtime_t startTime = ts->Now() + 50000; 
+    roster->StartNode(g_jamin_node->Node(), startTime);
+    ts->Release();
+
+    return (void*)g_jamin_node;   
+}
 
     
     const char ** jack_get_ports (jack_client_t *client, const char *port_name_pattern, 
